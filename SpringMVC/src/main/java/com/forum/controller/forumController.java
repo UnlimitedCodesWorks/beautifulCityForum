@@ -254,7 +254,7 @@ public class forumController {
 			boolean b=login==null||login.getUserId()==null||login.getUserId().length()==0;
 			try{
 				if(b){
-					response.sendRedirect("http://localhost:8080/SpringMVC/forum/1");
+					response.sendRedirect("http://localhost:8080/SpringMVC/login");
 				}
 			}catch (Exception e) {
 				// TODO: handle exception
@@ -351,7 +351,7 @@ public class forumController {
 			boolean b=login==null||login.getUserId()==null||login.getUserId().length()==0;
 			try{
 				if(b){
-					response.sendRedirect("http://localhost:8080/SpringMVC/forum/1");
+					response.sendRedirect("http://localhost:8080/SpringMVC/login");
 				}
 			}catch (Exception e) {
 				// TODO: handle exception

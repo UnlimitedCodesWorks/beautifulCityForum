@@ -4,8 +4,17 @@ public class LoginBean {
     private String password;
     private String userId;
     private int userIdentity;
+    private int blockForbidden;
 
-    public LoginBean(){}
+    public int getBlockForbidden() {
+		return blockForbidden;
+	}
+
+	public void setBlockForbidden(int blockForbidden) {
+		this.blockForbidden = blockForbidden;
+	}
+
+	public LoginBean(){}
 
     public String getUsername() {
         return username;

@@ -2,6 +2,9 @@
 <jsp:useBean id="userBean" class="com.forum.login.LoginBean" scope="session"/>
 <%
 	boolean b=userBean==null||userBean.getUserId()==null||userBean.getUserId().length()==0;
+	if(userBean.getBlockForbidden()==1){
+		response.sendRedirect("http://localhost:8080/SpringMVC/forum/1");
+	}
  %>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +30,7 @@
         </ul>
         <ul id="BannerRight">
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
-            <li><a href="#">首页</a></li>
+            <li><a href="http://localhost/8080/beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
             <li><a href="http://localhost:8080/SpringMVC/mail">消息</a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
@@ -106,6 +109,6 @@
 		 if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)){
 		 	$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
 		 }
-   	}	
+   	}
 </script>
 </html>

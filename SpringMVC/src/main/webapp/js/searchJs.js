@@ -102,7 +102,7 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 function creatCol_1(reply,content,userName,themeTime,floorTime,floorName,postUserId,floorId,themeId){
 	var node='<div class="row searchContentRow"><div class="col-md-1 col-lg-1 searchContentCol"><div class="searchContentCol_1 btn btn-primary">'
 		+reply+'</div></div><div class="col-md-7 col-lg-7 searchContentCol"><div class="searchContentCol_2">';
-	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'" class="label_2">"'+content+'"</a>';
+	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'" class="label_2">回复：'+content+'</a>';
 	node+='</div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_3"><a href="http://localhost:8080/SpringMVC/personal/'+postUserId+'">'
 	+userName+'</a><div>'+themeTime+'</div></div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_4"><div>'
 	+floorTime+'</div><a href="http://localhost:8080/SpringMVC/personal/'+floorId+'">'+floorName+'</a></div></div></div>';

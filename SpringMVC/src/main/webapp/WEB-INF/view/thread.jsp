@@ -56,7 +56,7 @@
         <div class="container-fluid">
             <div>
                 <ul class="nav navbar-nav" id="nav">
-                    <li><a href="#"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="http://localhost/8080/beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;登录</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/sign"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;注册</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%></a></li>
@@ -318,6 +318,13 @@
 		$("#footer").hide();
 		$(".chargeBtn").hide();
 		$(".chargeBtn_1").hide();
+	}
+	var blockForBidden="<%=userBean.getBlockForbidden()%>";
+	if(blockForBidden=='1'){
+		UM.getEditor('myEditor').setDisabled('fullscreen');
+        $("#postQuickFooter input").val("你被禁言了");
+        $("#postQuickFooter input").attr("disabled","disabled");
+        $("#postQuickTheme .input-group .form-control").attr("disabled","disabled");
 	}
 </script>
 </html>
