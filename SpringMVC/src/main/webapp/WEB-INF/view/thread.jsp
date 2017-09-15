@@ -59,7 +59,7 @@
                     <li><a href="http://localhost/8080/beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;登录</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/sign"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;注册</a></li>
-                    <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%></a></li>
+                    <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%> <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
                     <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;<%=personal%></a></li>
                     <li style="display:none"><a href="http://localhost:8080/SpringMVC/exit"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;注销</a>
                 </ul>
@@ -325,6 +325,13 @@
         $("#postQuickFooter input").val("你被禁言了");
         $("#postQuickFooter input").attr("disabled","disabled");
         $("#postQuickTheme .input-group .form-control").attr("disabled","disabled");
+	}
+	var unReadNum="<%=userBean.getUnreadNews()%>";
+	if(unReadNum=='0'){
+		$(".unread").hide();	
+	}else{
+		$(".unread").show();
+		$(".unread").text(unReadNum);
 	}
 </script>
 </html>

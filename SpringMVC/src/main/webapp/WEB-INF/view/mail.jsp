@@ -26,7 +26,7 @@
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
             <li><a href="http://localhost/8080/beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
-            <li><a href="http://localhost:8080/SpringMVC/mail">消息</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
             <li><a href='#' class="personalHref"><img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像"></a></li>
         </ul>
@@ -90,5 +90,12 @@
    		creatCol(labelArray,themeArray.themes[i].themeName,themeArray.themes[i].content,themeArray.themes[i].userId,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].themeId,themeArray.themes[i].responseId);
    	}
    	creatPageCol(pageNum,pageIndex);
+   	var unReadNum="<%=userBean.getUnreadNews()%>";
+	if(unReadNum=='0'){
+		$(".unread").hide();	
+	}else{
+		$(".unread").show();
+		$(".unread").text(unReadNum);
+	}
 </script>
 </html>

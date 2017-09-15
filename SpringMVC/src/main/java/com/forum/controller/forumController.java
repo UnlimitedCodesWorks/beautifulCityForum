@@ -44,6 +44,7 @@ import com.forum.page.PageRefresh;
 import com.forum.page.PointChange;
 import com.forum.page.SearchRefresh;
 import com.forum.page.TimeHandle;
+import com.forum.page.UnreadNews;
 
 @Controller
 @Scope("session")
@@ -255,6 +256,9 @@ public class forumController {
 			try{
 				if(b){
 					response.sendRedirect("http://localhost:8080/SpringMVC/login");
+				}else{
+					UnreadNews unread=new UnreadNews();
+					unread.find(login.getUserId(), session);
 				}
 			}catch (Exception e) {
 				// TODO: handle exception
@@ -338,7 +342,8 @@ public class forumController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				UnreadNews unread=new UnreadNews();
+				unread.find(login.getUserId(), session);
 			}
 			return "personal";
 		}
@@ -375,6 +380,21 @@ public class forumController {
 				}else{
 					pageNum=num/10+1;
 				}
+				String sqlStm="select theme.themeId,themeName,floorContent as content,floorTime as time,userName,floor.floorId as responseId,userId from theme,themefloor,floor,user where themefloor.themeId=theme.themeId and themefloor.floorId=floor.floorId and floorUserId=user.userId and hide=1 and postUserId=? "
+						+ "UNION select theme.themeId,themeName,responseContent as content,responseTime as time,userName,contentId as responseId,userId from userresponse,floor,themefloor,theme,user where userresponse.floorId=floor.floorId and floor.floorId=themefloor.floorId and themefloor.themeId=theme.themeId and responseId=user.userId and hide=1 and floorUserId=? order by time desc limit 1";
+				sql=con.prepareStatement(sqlStm);
+				sql.setString(1, userId);
+				sql.setString(2, userId);
+				rs=sql.executeQuery();
+				if(rs.next()){
+					String unReadTime=rs.getString("time");
+					sql=con.prepareStatement("update user set userReadTime = ? where userId=? ");
+					sql.setString(1, unReadTime);
+					sql.setString(2, userId);
+					sql.executeUpdate();
+				}
+				UnreadNews unread=new UnreadNews();
+				unread.find(userId, session);
 				model.addAttribute("pageNum",pageNum);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -423,7 +443,9 @@ public class forumController {
 					 	login.setPassword(password);
 					 	login.setUserIdentity(userIdentity);
 					 	HttpSession session=request.getSession();
+					 	UnreadNews unread=new UnreadNews();
 					 	session.setAttribute("userBean",login);
+					 	unread.find(userId, session);
 					 	response.setCharacterEncoding("UTF-8");	
 					 	result="pass";
 						json.append("{\"result\":\""+result+"\"}");

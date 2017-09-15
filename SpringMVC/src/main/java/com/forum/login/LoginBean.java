@@ -5,8 +5,17 @@ public class LoginBean {
     private String userId;
     private int userIdentity;
     private int blockForbidden;
+    private int unreadNews=0;
 
-    public int getBlockForbidden() {
+    public int getUnreadNews() {
+		return unreadNews;
+	}
+
+	public void setUnreadNews(int unreadNews) {
+		this.unreadNews = unreadNews;
+	}
+
+	public int getBlockForbidden() {
 		return blockForbidden;
 	}
 
