@@ -1,0 +1,152 @@
+/*
+* @Author: Marte
+* @Date:   2017-08-15 13:16:03
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-08-16 11:14:07
+*/
+p{
+	margin:0px;
+}
+body{
+    font-family:'Microsoft YaHei';
+}
+#TopBanner{
+    width: 100%;
+    position: relative;
+}
+#TopBanner img{
+    width:100%;
+}
+#BannerLeft{
+    list-style-type: none;
+    position:absolute;
+    left:0px;
+    bottom: -40px;
+}
+#BannerLeft li{
+    float: left;
+    width:250px;
+    height: 60px;
+    background-color: green;
+    margin-right: 50px;
+    text-align: center;
+    line-height: 60px;
+    font-size: 20px;
+    font-weight:550;
+    border:1px solid #FFFFFF;
+    border-radius: 4%;
+}
+#BannerLeft a{
+    color: white;
+}
+#BannerRight{
+    list-style-type:none;
+    position:absolute;
+    right:0px;
+    top:0px;
+    background-color:green;
+    border-radius:5%;
+    border:1px solid #FFFFFF;
+    padding-left: 0px;
+}
+#BannerRight li{
+    float: left;
+    font-size:17px;
+    text-align:center;
+    width:80px;
+    height:60px;
+    line-height:60px;
+}
+#BannerRight li:nth-child(1){
+    width:150px;
+    height:60px;
+    line-height:28px;
+    background-color:#103007;
+}
+#BannerRight li:hover{
+    opacity:0.8;
+    cursor:pointer;
+    border-bottom: 3px solid #FFFFFF;
+}
+#BannerRight a{
+    color:white;
+}
+#BannerRight a:hover{
+    text-decoration: none;
+}
+#BannerRight img{
+    width:50px;
+    height:50px;
+    display: inline-block;
+}
+#bannerBottom{
+    z-index:2;
+    position:absolute;
+    width:30%;
+    height:60px;
+    background-color: black;
+    color:#FFFFFF;
+    top: 0px;
+    left:0px;
+    text-align:center;
+    font-size:25px;
+    line-height:60px;
+    opacity: 0.8;
+}
+#bannerSearch{
+    z-index:2;
+    position:absolute;
+    right:0px;
+    bottom:-6px;
+    width:5%;
+    height:40px;
+}
+.input-group-addon:hover{
+    cursor:pointer;
+}
+.input-group-btn{
+    display:none;
+}
+#mailBody{
+    width:100%;
+    padding:40px 50px;
+}
+#mailBodyTop{
+    width:100%;
+    height:50px;
+    line-height:50px;
+    font-size:25px;
+    font-weight:600;
+    margin-bottom:10px;
+    box-sizing: border-box;
+    padding-left: 10px;
+}
+#mailBodyContent{
+    width:100%;
+}
+.mailContentRow{
+    height:50px;
+    line-height:50px;
+}
+.mailContentRow > div{
+    border:1px solid #D3D3D3;
+    font-size:15px;
+    text-align:center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.mailContentRow i{
+    display:inline-block;
+    font-size:18px;
+}
+.label_1{
+    color:#048A04;
+    font-size:15px;
+}
+.pagination > .focus > a{
+	z-index: 3;
+    color: #23527c;
+    cursor: default;
+    background-color: rgb(238,238,238);
+}

@@ -1,0 +1,49 @@
+/*
+* @Author: Marte
+* @Date:   2017-08-12 14:56:10
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-08-16 12:43:58
+*/
+
+body{
+    font-family:'Microsoft YaHei';
+    padding:20px;
+    background:url(http://pic1.win4000.com/wallpaper/c/548570a1a2660.jpg) no-repeat 0px 0px;
+}
+#container{
+    position: relative;
+    width:100%;
+    display:table;
+
+}
+#picture{
+    position:relative;
+}
+#pic{
+    z-index:3;
+    position:absolute;
+    top:10px;
+    left:25px;
+}
+#sign{
+    z-index:2;
+    font-size:20px;
+    line-height:20px;
+    opacity: 0;
+    text-align:center;
+    background:url(../images/background.jpg) no-repeat 0px 0px;
+    box-shadow:4px 2px 6px #333333;
+}
+
+a{
+    float: right;
+    font-size:15px;
+    color:white;
+}
+a:hover{
+    text-decoration: none;
+}
+
+#find{
+    color:#5d7af1;
+}
