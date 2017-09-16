@@ -286,7 +286,7 @@
 		}
 
 	}
-	if(json!=''){
+	if(json!='{"emails":]}'){
 		var mailArray=JSON.parse(json);
 		$(".emailContainer:eq(0)").html("");
 		for(var i=0;i<mailArray.emails.length;i++){
