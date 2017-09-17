@@ -34,7 +34,7 @@
             <li><a href="#" class="personalHref" >我的</a></li>
             <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
-            <li><a href='#' class="personalHref"><img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像"></a></li>
+            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" alt="用户头像"></a></li>
         </ul>
         <div id="bannerBottom">
         Beautiful Country Forum
@@ -104,11 +104,7 @@
    	var userId_1="<%=userBean.getUserId()%>";
    	if(b!="true"){
    		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-   		var ImgObj=new Image();
-		ImgObj.src="http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg";
-		 if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)){
-		 	$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 }
+		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
    	}
    	var unReadNum="<%=userBean.getUnreadNews()%>";
 	if(unReadNum=='0'){

@@ -31,7 +31,7 @@
             <li><a href="#" class="personalHref" >我的</a></li>
             <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
-            <li><a href='#' class="personalHref"><img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像"></a></li>
+            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" ></a></li>
         </ul>
         <div id="bannerBottom">
         Beautiful Country Forum
@@ -103,10 +103,10 @@
                     </div>
                     <div class="imgContent" style="position: relative;">
                         <div class="imgShow" >
-                            <img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" style="width:198px;height:198px;display:inline-block;">
+                            <img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" style="width:198px;height:198px;display:inline-block;">
                         </div>
                         <div class="imgContainer" style="display:none">
-                            <img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg"  alt="头像">
+                            <img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'"  alt="头像">
                         </div>
                         <label  class="importDiv" style="display:none" for="inputImage" title="Upload image file">
                         <input  id="inputImage" name="file" type="file" accept="image/*">
@@ -261,6 +261,8 @@
 	$(".personalLink:eq(0)").attr("href",url_1);
 	$(".personalLink:eq(1)").attr("href",url_2);
 	var b="<%=b%>";
+	$(".imgShow img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId+".jpg");
+	$(".imgContainer img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId+".jpg");
 	if(b=="true"){
 		$("#BannerRight").hide();
 		$(".change:eq(0)").hide();
@@ -270,13 +272,7 @@
 		$(".email").hide();
 	}else{
 		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-		var ImgObj=new Image();
-		ImgObj.src="http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg";
-		 if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)){
-		 	$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 	$(".imgShow img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 	$(".imgContainer img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 }
+		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");		 
 		if(userId_1!=userId){
 			$(".change:eq(0)").hide();
 			$("#changeIcon").hide();
@@ -286,7 +282,7 @@
 		}
 
 	}
-	if(json!='{"emails":]}'){
+	if(json!='{"emails":]}'&&json!=''){
 		var mailArray=JSON.parse(json);
 		$(".emailContainer:eq(0)").html("");
 		for(var i=0;i<mailArray.emails.length;i++){
