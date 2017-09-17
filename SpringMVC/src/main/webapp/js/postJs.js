@@ -64,13 +64,17 @@ function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,fl
 	time.append(response);
 	response.addClass("responseFloor");
 	response.attr("id","responseFloor"+floorNumber);
-	response.attr("onclick","Floor(\""+floorNumber+"\")");
+	response.attr("onclick","Floor(\""+floorNumber+"\",\""+floorId+"\")");
 	
 	var floorIn=$('<div></div>');
 	floorIn.addClass("floorIn");
 	floorIn.attr("id","floorIn"+floorNumber);
 	time.append(floorIn);
 	floorIn.css('display','none');
+	
+	var response1=$('<div></div>');
+	response1.attr("id","response1"+floorNumber);
+	floorIn.append(response1);
 	
 	var userName1=$('<a></a>');
 	userName1.html(userName);
@@ -94,40 +98,14 @@ function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,fl
 	delete1.attr("href","javascript:void(0)");
 	delete1.attr("onclick","deleteFloor(\""+floorId+"\",this)");
 	
-	ban.attr("onclick","ban(\""+floorId+"\",\""+userId+"\",this)");
+	ban.attr("onclick","ban(\""+userId+"\",this)");
 	
+	input(floorId,floorNumber);
 	
-	
-	
-	var response1=$('<div></div>');
-	var responseHead=$('<div></div>');
-	var responseName=$('<div></div>');
-	var responseContent=$('<div></div>');
-	var responseContent1=$('<div></div>');
-	var responseTime=$('<span></span>');
-	response1.append(responseHead);
-	response1.append(responseName);
-	response1.append(responseContent);
-	response1.addClass("response1");
-	responseHead.addClass("responseHead");
-	responseName.addClass("responseName");
-	responseContent.addClass("responseContent");
-	responseContent1.addClass("responseContent1");
-	responseContent.append(responseContent1);
-	responseContent.append(responseTime);
-	responseTime.html("2017-09-12 13:50&nbsp")
-	floorIn.append(response1);
-	
-	var responseHeadPic=$('<image src=images/head.jpg style="width:60%;"/>');
-	responseHead.append(responseHeadPic);
-	
-	
-	
-		
 }
 
 
-function Floor(i){ 
+function Floor(i,floorId){ 
 
   
 	if($('#floorIn'+i).is(':hidden')){//如果当前隐藏  
@@ -137,6 +115,35 @@ function Floor(i){
             $('#floorIn'+i).css('display','none');
             $('#responseFloor'+i).html("查看回复") ;
             }
+	
+	$('#response1'+i).html("");
+	$.ajax({
+	    type: "POST",
+		url: "http://localhost:8080/SpringMVC/responseFloorAjax",
+		data: {
+			floorId:floorId,
+			floorNumber:i
+		},
+		dataType: "json",
+		success: function(data){
+
+			for(var i=0;i<data.response.length;i++){
+			var userName=data.response[i].userName;
+			var contentId=data.response[i].contentId;
+			var responseContent=data.response[i].responseContent;
+			var floorId=data.response[i].floorId;
+			var floorNumber=data.response[i].floorNumber;
+			var responseTime=data.response[i].responseTime;
+			var responseId=data.response[i].responseId;
+			createResponse(userName,responseId,responseContent,responseTime,floorId,contentId,floorNumber);}
+		},
+		error: function(jqXHR){
+			$('#response1'+i).html("");
+		},
+	});
+	
+	
+	
 
 };
 
@@ -168,16 +175,16 @@ function deleteFloor(floorId,val){
 	
 }
 
-function ban(floorId,userId,val){
+function ban(userId,val){
 	$("#modal-container-538356").modal('show');
-	$("#infocontext1").html("确定禁言此用户吗？");
+	$("#infocontext1").html("确定禁言此用户吗？禁言后该用户将不可再发言");
 	
 	$("#confirm1").click(function(){
 		$.ajax({ 
-		    type: 'POST', 	
+		    type: 'POST', 
+
 			url: 'http://localhost:8080/SpringMVC/banAjax',
 			data: {
-				floorId:floorId,
 				userId:userId
 			},
 			dataType: 'json',
@@ -195,64 +202,109 @@ function ban(floorId,userId,val){
 }
 
 
-function createResponse(userName,responseId,responseContent,responseTime,floorId,contentId){
+function createResponse(userName,responseId,content,time,floorId,contentId,floorNumber){
 
-	
-	var floor1=$('<div></div>');
-	var left=$('<div></div>');
-	var right=$('<div></div>');
-	floor1.append(left);
-	floor1.append(right);
-	$("#floor").append(floor1);
-	floor1.addClass("floor1");
-	left.addClass("left");
-	right.addClass("right");
-	
-	var head=$('<div></div>');
-	var headpic=$('<image src=images/head.jpg/>');
-	var name=$('<div></div>');
-	left.append(head);
-	left.append(name);
-	head.append(headpic);
-	head.addClass("head");
-	name.addClass("name");
-	
-	
-	var bandelete=$('<span></span>');
-	bandelete.addClass("bandelete");
-	var content=$('<div></div>');
-	content.addClass("content");
-	var time=$('<div></div>');
-	time.addClass("time");
-	right.append(bandelete);
-	right.append(content);
-	right.append(time);
-	
-	
-
-	time.html("&nbsp"+responseTime+"&nbsp");
-	content.html(responseContent);
-	
-	
-	var userName1=$('<a></a>');
-	userName1.html(userName);
-	userName1.attr("href","http://localhost:8080/SpringMVC/personal/"+responseId);
-	name.append(userName1);
-	
-	
-	bandelete.addClass("bandelete");
-	
-	var delete1=$('<a></a>');
+	var response2=$('<div></div>');
+	var responseHead=$('<div></div>');
+	var responseName=$('<div></div>');
+	var responseContent=$('<div></div>');
+	var responseContent1=$('<div></div>');
+	var responseTime=$('<span></span>');
+	var delete1=$('<span></span>');
+	var delete_a1=$('<a></a>');
 	var deleteNode='<i class="glyphicon glyphicon-trash"></i>删除';
-	delete1.html(deleteNode);
-	bandelete.append(delete1);
+	delete_a1.html(deleteNode);
+	delete1.append(delete_a1);
+	delete1.addClass("delete1");
+	response2.append(responseHead);
+	response2.append(responseName);
+	response2.append(responseContent);
+	response2.addClass("response2");
+	responseHead.addClass("responseHead");
+	responseName.addClass("responseName");
+	responseContent.addClass("responseContent");
+	responseContent1.addClass("responseContent1");
+	responseContent1.html(content);
+	responseContent.append(delete1);
+	responseContent.append(responseContent1);
+	responseContent.append(responseTime);
+	responseName.html(userName+":");
+	responseTime.html(time)
+	$('#response1'+floorNumber).append(response2);
 	
-	delete1.attr("href","javascript:void(0)");
-	delete1.attr("onclick","deleteFloor(\""+floorId+"\",this)");
+	var responseHeadPic=$('<image src=images/head.jpg style="width:60%;"/>');
+	responseHead.append(responseHeadPic);
+	
+	delete_a1.attr("onclick","deleteResponse(\""+contentId+"\",this)");
 	
 		
 }
 
+function input(floorId,i){
+	var input=$('<div></div>');
+	var text=$('<textarea></textarea>');
+	var submit=$('<span></span>');
+	input.addClass("input");
+	input.append(text);
+	input.append(submit);
+	text.css("resize","none");
+	text.addClass("text");
+	submit.addClass("submit");
+	$('#floorIn'+i).append(input);
+	submit.html("我也说一句");
+	submit.attr("id","submit"+i);
+	text.attr("id","text"+i);
+	submit.attr("onclick","responseFloor(\""+floorId+"\",\""+i+"\")");
+}
 
+
+
+
+function deleteResponse(contentId,val){
+	$("#modal-container-972740").modal('show');
+	$("#infocontext2").html("确定要删除此层吗？");
+	
+	$("#confirm2").click(function(){
+		$.ajax({ 
+		    type: 'POST', 	
+			url: 'http://localhost:8080/SpringMVC/removeResponseAjax',
+			data: {
+				contentId:contentId,
+			},
+			dataType: 'json',
+			success: function(data){
+				if(data.success){
+					var fNode =val.parentNode.parentNode.parentNode;
+					fNode.remove();
+					$("#modal-container-972740").modal('hide');
+					}
+			},
+			error: function(jqXHR){     
+			   alert("发生错误：" + jqXHR.status);  
+			},     
+		});
+	});
+	
+}
+
+
+
+function creatPageCol(pageNum,pageIndex,themeId){
+	var node='';
+	for(var i=0;i<pageNum;i++){
+		node+='<li><a href="http://localhost:8080/SpringMVC/read?ID='+themeId+'&pageIndex='+(i+1)+'">'+(i+1)+'</a></li>';
+	}
+	if(parseInt(pageIndex)!=1){
+		location.href = "#firstAnchor";
+	}
+	if(parseInt(pageNum)!=1&&parseInt(pageIndex)!=parseInt(pageNum)){
+		node+='<li><a href="http://localhost:8080/SpringMVC/read?ID='+themeId+'&pageIndex='+pageIndex+'">下一页 &rarr;</a></li>';
+	}
+	$('.forumPagination').append(node);
+	$('.forumPagination > li:eq('+(parseInt(pageIndex)-1)+')').addClass("focus");
+	if(parseInt(pageIndex)!=1){
+		$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/read?ID='+themeId+'&pageIndex='+pageIndex+'"">&larr; 上一页</a></li>');
+	}
+}
 
 

@@ -1,8 +1,8 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="com.sun.rowset.*" %>
 <jsp:useBean id="userBean" class="com.forum.login.LoginBean" scope="session"/>
-<%
+<%	 
 	boolean b=userBean==null||userBean.getUserId()==null||userBean.getUserId().length()==0;
 	String mail="通知";
 	String personal="个人中心";
@@ -16,14 +16,14 @@
                   + path + "/";
 %>
 <%
-	String themeId=request.getParameter("id");
+	String themeId=request.getParameter("ID");
 	Connection con=null;
 	PreparedStatement sql;
 	ResultSet rs;
 	String driver="com.mysql.jdbc.Driver";
 		String url="jdbc:mysql://localhost:3306/countryforum?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		String user="root";
-		String password="15869105934";
+		String password="13750984796";
 		try {
 			Class.forName(driver);
 			con=DriverManager.getConnection(url,user,password);
@@ -43,12 +43,13 @@
 		
 		
 		
-		
+		String lastFloorId="1";
 		sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime  desc");
 		sql.setString(1,themeId);
 		rs=sql.executeQuery();
-		rs.next();
-		String lastFloorId=rs.getString("floorId");
+		if(rs.next()){
+		lastFloorId=rs.getString("floorId");}
+		System.out.println(lastFloorId);
 		
 		
 		
@@ -188,7 +189,7 @@
     	<div class="floor1">
     		<div class="left">
     			<div class="head"><img alt="140x140" src="images/head.jpg" /></div>
-    			<div class="name"><a href="http://localhost:8080/SpringMVC/personal/<%=postUserId %>"><%=userName %></a><a  class="ban">&nbsp[<i class="glyphicon glyphicon-ban-circle"></i>禁言]</a></div>
+    			<div class="name"><a href="http://localhost:8080/SpringMVC/personal/<%=postUserId %>"><%=userName %></a><a  class="ban" onclick="ban(<%=postUserId %>,this)" >&nbsp[<i class="glyphicon glyphicon-ban-circle"></i>禁言]</a></div>
     			<div class="level">用户组：<%=title1 %></div>
     		</div>
     		<div class="right">
@@ -207,30 +208,7 @@
     <div class="row clearfix">
         <div class="col-md-12 column">
             <ul class="pagination forumPagination">
-                <li>
-                     <a href="#"><<</a>
-                </li>
-                <li>
-                     <a href="#">1</a>
-                </li>
-                <li>
-                     <a href="#">2</a>
-                </li>
-                <li>
-                     <a href="#">3</a>
-                </li>
-                <li>
-                     <a href="#">4</a>
-                </li>
-                <li>
-                     <a href="#">...</a>
-                </li>
-                <li>
-                     <a href="#">尾页</a>
-                </li>
-                <li>
-                     <a href="#">>></a>
-                </li>
+                
             </ul>
         </div>
     </div>
@@ -297,6 +275,52 @@
 				</div>
 				
 			</div>
+			
+			
+			<div class="modal fade" id="modal-container-972740" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header" >
+							 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							<h4 class="modal-title" id="myModalLabel" >
+								提示
+							</h4>
+						</div>
+						<div class="modal-body" id="infocontext2">
+							
+						</div>
+						<div class="modal-footer">
+							 <button type="button" class="btn btn-warning" data-dismiss="modal" >取消</button> 
+							 <button type="button" class="btn btn-primary" id="confirm2">确定</button>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+			
+			
+			<div class="modal fade" id="modal-container-118152" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header" >
+							 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							<h4 class="modal-title" id="myModalLabel" >
+								提示
+							</h4>
+						</div>
+						<div class="modal-body" >
+							请先登录账号
+						</div>
+						<div class="modal-footer">
+							 <button type="button" class="btn btn-warning" data-dismiss="modal" >确定</button> 
+							 
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
 
 
 </body>
@@ -305,86 +329,30 @@
 	
 	
 	
-	
+	var json='${postPage}';
+	var pageIndex='${pageIndex}';
+	pageIndex=parseInt(pageIndex);
+	var pageIndex='${pageIndex}';
+	var pageNum='${pageNum}';
+	var themeId="<%=themeId%>";
+	var postJson=JSON.parse(json);
 
     $('#floor').html("");
-    <%
-		rowSet.absolute(1);
-		boolean boo=true;
-		for(int n=1;n<=number&&boo;n++){
-				String floorUserId=rowSet.getString("floorUserId");   
-        		String floorTime=rowSet.getString("floorTime");
-        		String floorUserName=rowSet.getString("userName");
-        		String floorContent=rowSet.getString("floorContent");
-        		String floorId=rowSet.getString("floorId");
-        		String floorNumber=floorId.substring(floorId.indexOf(",")+1);
-        		int a = Integer.parseInt(floorNumber);
-        		int userPoints=rowSet.getInt("userPoints");
-        		
-        		String datetime=floorTime.substring(0,16);
-        		
-        		
-        		
-        String title = null;
-		if(userPoints<5){
-			title="山清水秀";
-		}else if(userPoints>=5&&userPoints<15){
-			title="湖光山色";
-		}else if(userPoints>=15&&userPoints<30){
-			title="沂水春风";
-		}else if(userPoints>=30&&userPoints<50){
-			title="渊渟岳峙";
-		}else if(userPoints>=50&&userPoints<100){
-			title="钟灵毓秀";
-		}else if(userPoints>=100&&userPoints<200){
-			title="高山流水";
-		}else if(userPoints>=200&&userPoints<500){
-			title="空谷幽兰";
-		}else if(userPoints>=500&&userPoints<1000){
-			title="高山仰止";
-		}else if(userPoints>=1000){
-			title="陌上花开";
-		}
-	%>
-				var floorUserId="<%=floorUserId%>";
-				var floorTime="<%=datetime%>";
-				var floorUserName="<%=floorUserName%>";
-				var floorContent="<%=floorContent%>";
-				var floorId="<%=floorId%>";
-				var floorNumber="<%=a%>";
-				var title="<%=title%>";
-
-				createFloor(floorUserName,floorUserId,floorContent,floorTime,floorNumber,title,floorId);
-	<%
-			boo=rowSet.next();
-		}
-
-    %>
+for(var i=0;i<postJson.length;i++){
+   		createFloor(postJson[i].userName,postJson[i].floorUserId,postJson[i].floorContent,postJson[i].floorTime,i+1,postJson[i].userPoints,postJson[i].floorId)
+   	}
     
-    <%
-		rowSet1.absolute(1);
-		boolean boo1=true;
-		for(int i=1;i<=labelNumber&&boo1;i++){
-				String labelName=rowSet1.getString("labelName");   
-
-	%>
-				var labelName="<%=labelName%>";
-				var labelNames=$('<a></a>');
-				labelNames.html("["+labelName+"]");
-				$('#labelName').append(labelNames)
-				labelNames.attr("href","#");
-
-	<%
-			boo1=rowSet1.next();
-		}
-
-    %>
+    creatPageCol(pageNum,pageIndex,themeId);
     
     
     function response(){
 	var content=UM.getEditor('myEditor').getContent();
 	var userId="<%=userBean.getUserId()%>";
-	var floorNumber="<%=lastFloorId.substring(lastFloorId.indexOf(",")+1)%>";
+	var lastFloorId="<%=lastFloorId%>";
+	var floorNumber;
+	if(lastFloorId==1){
+		floorNumber=1;
+	}else{ floorNumber=lastFloorId.substring(lastFloorId.indexOf(",")+1);}
 	var themeId="<%=themeId%>";
 	
 	$.ajax({
@@ -406,7 +374,6 @@
 			var userTitle=data.userTitle;
 			var floorId=data.floorId;
 		createFloor(userName,userId,content,time,floorNumber,userTitle,floorId);
-		window.location.reload();
 			
 		},
 		error: function(jqXHR){
@@ -414,6 +381,45 @@
 		},
 	});
 }
+
+function responseFloor(floorId,i){
+	var b="<%=b%>";
+	var content=$("#text"+i).val();
+	var userId="<%=userBean.getUserId()%>";
+	if(b=="false"){
+	$.ajax({
+	    type: "POST",
+		url: "http://localhost:8080/SpringMVC/responseInputAjax",
+		data: {
+			userId: userId,
+			floorId:floorId,
+			content:content,
+			floorNumber:i
+		},
+		dataType: "json",
+		success: function(data){
+			var userName=data.userName;
+			var userId=data.userId;
+			var content=data.content;
+			var time=data.time;
+			var floorId=data.floorId;
+			var contentId=data.contentId;
+			var floornumber1=data.floorNumber;
+		createResponse(userName,userId,content,time,floorId,contentId,floorNumber1)
+			
+		},
+		error: function(jqXHR){
+		   alert("发生错误：" + jqXHR.status);
+		},
+	});}
+	
+	else{
+		$("#modal-container-118152").modal('show');
+	}
+	
+}
+	
+
 
 
 	var b="<%=b%>";
@@ -428,16 +434,19 @@
 		$("#nav li:eq(6)").show();
 		$("#footer").show();
 		$("#nav li:eq(5) a").attr("href","http://localhost:8080/SpringMVC/personal/"+userId);
-		
+		$(".input").show();
 		if(userIdentity==1){
-		$(".ban").show();}
+		$(".ban").show();
+		}
 		else{$(".ban").hide();
 		}
 		
 		
 		if(userId==postUserId||userIdentity==1){
-		$(".bandelete").show();}
+		$(".bandelete").show();
+		$(".delete1").show();}
 		else{$(".bandelete").hide();
+		$(".delete1").hide();
 		}
 		
 
@@ -446,8 +455,7 @@
 		$("#footer").hide();
 		$(".ban").hide();
 		$(".bandelete").hide();
-	
-
+		$(".delete1").hide();
 	}
 
 </script>

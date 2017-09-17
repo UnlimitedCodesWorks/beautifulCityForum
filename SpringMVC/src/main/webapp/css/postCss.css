@@ -22,39 +22,24 @@ body{
 #path{
     margin-top:15px;
 }
-#select{
+.submit{
     width:80px;
-    height:30px;
-    padding:10px;
+    height:20%;
+    padding:5px;
     border-radius: 5px;
     font-weight:bold;
     border:1px black solid;
-    margin-right:20px;
+    background-color:white;
+    
 }
-#select:hover{
+.submit:hover{
     color:#6dd9fd;
     border:1px #6dd9fd solid;
     cursor:pointer;
 }
 
 
-.post1{
-    border:#99c4f0 1px solid;
-    background-color:white;
-    opacity:0.8;
-    margin-top: 5px;
-    padding:15px;
-    box-shadow:4px 2px 6px #333333;
-    
-}
-.post{
-    border:#99c4f0 1px solid;
-    background-color:#e8f6f9;
-    opacity:0.8;
-    margin-top: 5px;
-    padding:15px;
-    box-shadow:4px 2px 6px #333333;
-}
+
 .time{
     text-align:right;
 }
@@ -164,6 +149,7 @@ body{
 	margin-right:30px;
 	cursor:pointer;
 }
+
 .head{
 	padding:3px;
 	border:1px #c8ebf3 solid;
@@ -175,10 +161,13 @@ body{
 
 .floorIn{
 	width:100%;
-	height:200px;
-	border:2px white solid;
-	border-radius:5px;
+	min-height:0px;
+}
 
+.delete1{
+	float:right;
+	margin-right:30px;
+	cursor:pointer;
 }
 
 .ban{
@@ -190,34 +179,53 @@ body{
 
 
 
-.response1{
+.response2{
 	width:100%;
-	height:60px;
-	border:1px black solid;
+	height:90px;
+	border:1px white solid;
+	margin-bottom:10px;
+	border-radius:5px;
+	padding:5px;
 }
 .responseHead{
-	width:10%;
+	width:8%;
 	height:100%;
-	border:1px black solid;
 	float:left;
 	padding:3px;
 }
 .responseName{
-	width:10%;
+	width:8%;
 	height:100%;
-	border:1px black solid;
 	float:left;
+	text-align:left;
+	padding-top:5px;
+	padding-left:5px;
+	font-weight:bold;
 }
 .responseContent{
-	width:80%;
+	width:84%;
 	height:100%;
-	border:1px black solid;
 	float:left;
 }
 .responseContent1{
 	width:100%;
-	height:70%;
-	border:1px black solid;
+	height:60%;
+	text-align:left;
+	padding-top:5px;
+}
+
+.input{
+	width:100%;
+	height:100px;
+	border:1px white solid;
+	margin-bottom:10px;
+	border-radius:5px;
+}
+
+.text{
+	width:100%;
+	height:60%;
+	margin-bottom:5px;
 }
 
 .forumPagination{

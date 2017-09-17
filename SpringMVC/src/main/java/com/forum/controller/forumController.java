@@ -42,6 +42,7 @@ import com.forum.page.EmailRefresh;
 import com.forum.page.MailRefresh;
 import com.forum.page.PageRefresh;
 import com.forum.page.PointChange;
+import com.forum.page.ReadRefresh;
 import com.forum.page.SearchRefresh;
 import com.forum.page.TimeHandle;
 import com.forum.page.UnreadNews;
@@ -59,7 +60,7 @@ public class forumController {
 			driver="com.mysql.jdbc.Driver";
 			url="jdbc:mysql://localhost:3306/countryforum?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 			user="root";
-			password="15869105934";
+			password="13750984796";
 			try {
 				Class.forName(driver);
 				con=DriverManager.getConnection(url,user,password);
@@ -408,8 +409,45 @@ public class forumController {
 			return "hello";
 		}
 		@RequestMapping(value="/read",method=RequestMethod.GET)
-			public String readServlet(@RequestParam(value="id",required=true) String id,HttpServletRequest request){
+			public String readServlet(@RequestParam(value="ID",required=true) String ID,@RequestParam(value="pageIndex",required=false) String pageIndex,ModelMap model,HttpServletRequest request) throws SQLException{
 			
+			try {
+				ResultSet rs;
+				PreparedStatement sql;
+				int pageIndex1=Integer.parseInt(pageIndex);
+				String themeId=ID;	
+			 	String json;
+			 	System.out.println(pageIndex1);
+			 	System.out.println(themeId);
+						
+			 	sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime  desc");
+						sql.setString(1,themeId);
+						rs=sql.executeQuery();
+						rs.last();
+						int tatalRecoder=rs.getRow();
+						rs.first();
+						int pageNum=0;
+						System.out.println(tatalRecoder);
+						if(tatalRecoder%8==0){
+							pageNum=tatalRecoder/8;
+						}else{
+							pageNum=tatalRecoder/8+1;
+						}
+							
+						int startIndex=8*pageIndex1-7;
+						int endIndex=8*pageIndex1;
+						ReadRefresh read=new ReadRefresh();
+						json=read.refresh(startIndex, endIndex,themeId);
+						model.addAttribute("postPage",json);
+						model.addAttribute("pageIndex",pageIndex);
+						model.addAttribute("postNum",pageNum);
+						System.out.println(json);
+	
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			return "post";
 		}
 		@RequestMapping(value="/login",method=RequestMethod.GET)
@@ -424,12 +462,15 @@ public class forumController {
 				request.setCharacterEncoding("UTF-8");
 				String password=request.getParameter("password");
 				String userId=request.getParameter("userId");
-				System.out.println(password);
-				System.out.println(userId);
 				PrintWriter out = response.getWriter();
 			 	StringBuffer json=new StringBuffer();
 			 	String result;
 				if(password!=null&&userId!=null&&password!=""&&userId!=""){
+					sql=con.prepareStatement("select user.userId from user where user.userId=?");					
+					sql.setString(1,userId);
+					rs=sql.executeQuery();
+					if(rs.next()){
+					
 					sql=con.prepareStatement("select user.userId,user.userName,user.userIdentity,user.userPassword from user where user.userId=? and user.userPassword=?");					
 					sql.setString(1,userId);
 					sql.setString(2,password);
@@ -449,7 +490,6 @@ public class forumController {
 					 	response.setCharacterEncoding("UTF-8");	
 					 	result="pass";
 						json.append("{\"result\":\""+result+"\"}");
-						System.out.println(json);
 						out.print(json.toString());
 						out.flush();
 						out.close();
@@ -457,7 +497,14 @@ public class forumController {
 					else{
 						result="passfailed1";
 						json.append("{\"result\":\""+result+"\"}");
-						System.out.println(json);
+						out.print(json.toString());
+						out.flush();
+						out.close();
+					}
+					
+					}else{
+						result="passfailed3";
+						json.append("{\"result\":\""+result+"\"}");
 						out.print(json.toString());
 						out.flush();
 						out.close();
@@ -466,7 +513,6 @@ public class forumController {
 				}else{
 					result="passfailed2";
 					json.append("{\"result\":\""+result+"\"}");
-					System.out.println(json);
 					out.print(json.toString());
 					out.flush();
 					out.close();
@@ -503,17 +549,17 @@ public class forumController {
 					rs=sql.executeQuery();
 					if(!rs.next()){		 	
 						if(password.equals(repassword)){
-							sql=con.prepareStatement("insert into user(userId,userName,userPassword,userIdentity,userPoints) values(?,?,?,?,?)");
+							sql=con.prepareStatement("insert into user(userId,userName,userPassword,userIdentity,userPoints,blockForbidden) values(?,?,?,?,?,?)");
 							sql.setString(1,userId);
 							sql.setString(2,userName);
 							sql.setString(3,password);
 							sql.setInt(4,0);
 							sql.setInt(5, 0);
+							sql.setInt(6, 0);
 							sql.executeUpdate();
 							response.setCharacterEncoding("UTF-8");	
 						 	result="pass";
 							json.append("{\"result\":\""+result+"\"}");
-							System.out.println(json);
 							out.print(json.toString());
 							out.flush();
 							out.close();
@@ -521,7 +567,6 @@ public class forumController {
 						else{
 							result="passfailed2";
 							json.append("{\"result\":\""+result+"\"}");
-							System.out.println(json);
 							out.print(json.toString());
 							out.flush();
 							out.close();
@@ -530,7 +575,6 @@ public class forumController {
 					else{
 						result="passfailed1";
 						json.append("{\"result\":\""+result+"\"}");
-						System.out.println(json);
 						out.print(json.toString());
 						out.flush();
 						out.close();
@@ -544,6 +588,37 @@ public class forumController {
 	}
 		
 		
+		@RequestMapping(value="/removeResponseAjax",method=RequestMethod.POST)
+		 public void removeResponseAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				String contentId=request.getParameter("contentId");
+
+
+				PrintWriter out = response.getWriter();
+
+				sql=con.prepareStatement("delete from userresponse where contentId=?");
+				sql.setString(1,contentId);
+				sql.executeUpdate();
+				
+						
+											
+					out.print("{\"success\":true}");
+					out.flush();  
+					out.close(); 
+						
+					
+					
+
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
 		@RequestMapping(value="/removeAjax",method=RequestMethod.POST)
 		 public void removeAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
 			try {
@@ -553,7 +628,6 @@ public class forumController {
 				String floorId=request.getParameter("floorId");
 
 
-				System.out.println(floorId);
 				PrintWriter out = response.getWriter();
 
 				sql=con.prepareStatement("delete from themefloor where floorId=?");
@@ -590,19 +664,11 @@ public class forumController {
 				ResultSet rs;
 				PreparedStatement sql;
 				request.setCharacterEncoding("UTF-8");
-				String floorId=request.getParameter("floorId");
-				
-				String themeId=floorId.substring(0, floorId.indexOf(","));
 				String userId=request.getParameter("userId");
-
-
-				System.out.println(themeId);
-				System.out.println(userId);
 				PrintWriter out = response.getWriter();
 
-				sql=con.prepareStatement("insert into themeforbidden values(?,?)");
-				sql.setString(1,themeId);
-				sql.setString(2,userId);
+				sql=con.prepareStatement("update user set blockForbidden='1' where userId=?");
+				sql.setString(1,userId);
 				sql.executeUpdate();
 				
 
@@ -623,12 +689,89 @@ public class forumController {
 	}
 		
 		
+		@RequestMapping(value="/responseInputAjax",method=RequestMethod.POST)
+		 public void responseInputAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html;charset=utf-8");
+				String userId=request.getParameter("userId");
+				String floorId=request.getParameter("floorId");
+				String content=request.getParameter("content");
+				String floorNumber=request.getParameter("floorNumber");
+				
+				Date now=new Date();
+				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String datetime=dateFormat.format(now);
+				String datetime1=datetime.substring(0,16);
+
+				PrintWriter out = response.getWriter();
+			 	StringBuffer json=new StringBuffer();
+					if(content!=""||content!=null){	
+						
+						sql=con.prepareStatement("select contentId from userresponse where floorId=? order by responseTime desc ");
+						sql.setString(1,floorId);
+						rs=sql.executeQuery();
+						String number="0";
+						if(rs.next()){
+						String lastcontentId=rs.getString("contentId");
+						number=lastcontentId.substring(lastcontentId.indexOf(",",lastcontentId.indexOf(",")+1) + 1);
+						System.out.println(lastcontentId);
+						}
+						int number1=Integer.parseInt(number)+1;
+						String contentId=floorId+","+number1;
+						
+						
+						sql=con.prepareStatement("select userName from user where userId=?");
+						sql.setString(1,userId);
+						rs=sql.executeQuery();
+						rs.next();
+						String userName=rs.getString("userName");
+						
+						
+
+						
+						sql=con.prepareStatement("insert into userresponse values(?,?,?,?,?)");
+						sql.setString(1,contentId);
+						sql.setString(2,floorId);
+						sql.setString(3,userId);
+						sql.setString(4,content);
+						sql.setString(5,datetime);
+						sql.executeUpdate();	
+						
+						
+						
+						json.append("{\"userName\":\""+userName+"\",");
+						json.append("\"userId\":\""+userId+"\",");
+						json.append("\"floorId\":\""+floorId+"\",");
+						json.append("\"floorNumber\":\""+floorNumber+"\",");
+						json.append("\"contentId\":\""+contentId+"\",");
+						json.append("\"content\":\""+content+"\",");
+						json.append("\"time\":\""+datetime1+"\"}");
+					out.print(json.toString());
+					out.flush();  
+					out.close(); 
+						
+					}
+					
+
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
+		
+		
 		@RequestMapping(value="/responseAjax",method=RequestMethod.POST)
 		 public void responseAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
 			try {
 				ResultSet rs;
 				PreparedStatement sql;
 				request.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html;charset=utf-8");
 				String userId=request.getParameter("userId");
 				String themeId=request.getParameter("themeId");
 				String content=request.getParameter("content");
@@ -636,15 +779,11 @@ public class forumController {
 				int floorNumber1=Integer.parseInt(floorNumber)+1;
 				String floorNumber2 = Integer.toString(floorNumber1);
 				String floorId=themeId+","+floorNumber2;
-				
 				Date now=new Date();
 				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String datetime=dateFormat.format(now);
 				String datetime1=datetime.substring(0,16);
-				System.out.println(userId);
-				System.out.println(content);
-				System.out.println(themeId);
-				System.out.println(floorNumber1);
+
 				PrintWriter out = response.getWriter();
 			 	StringBuffer json=new StringBuffer();
 					if(content!=""||content!=null){	
@@ -690,6 +829,57 @@ public class forumController {
 					}
 					
 
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
+		
+		@RequestMapping(value="/responseFloorAjax",method=RequestMethod.POST)
+		 public void responseFloorAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter out = response.getWriter();
+				String floorId=request.getParameter("floorId");
+				String floorNumber=request.getParameter("floorNumber");
+				boolean boo=true;		
+			 	StringBuffer json=new StringBuffer();
+						
+						sql=con.prepareStatement("select contentId,userName,responseId,responseContent,responseTime from user,userresponse where floorId=? and userresponse.responseId=user.userId order by responseTime");
+						sql.setString(1,floorId);
+						rs=sql.executeQuery();
+						rs.last();
+						int number=rs.getRow();
+						rs.first();
+						json.append("{\"response\":[");
+						for(int i=1;i<=number&&boo;i++){
+							String userName=rs.getString("userName");
+							String contentId=rs.getString("contentId");
+							String responseContent=rs.getString("responseContent");
+							String responseId=rs.getString("responseId");
+							String responseTime=rs.getString("responseTime");
+							String responseTime1=responseTime.substring(0,16);
+							json.append("{\"responseId\":\""+responseId+"\",");							
+							json.append("\"userName\":\""+userName+"\",");
+							json.append("\"contentId\":\""+contentId+"\",");
+							json.append("\"floorId\":\""+floorId+"\",");
+							json.append("\"floorNumber\":\""+floorNumber+"\",");
+							json.append("\"responseContent\":\""+responseContent+"\",");
+							json.append("\"responseTime\":\""+responseTime1+"\"},");
+							
+							boo=rs.next();
+						}
+						json.deleteCharAt(json.length() - 1);
+						json.append("]}");	
+					out.print(json.toString());
+					out.flush();  
+					out.close(); 
+					
 	
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
