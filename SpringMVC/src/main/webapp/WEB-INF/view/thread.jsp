@@ -56,7 +56,7 @@
         <div class="container-fluid">
             <div>
                 <ul class="nav navbar-nav" id="nav">
-                    <li><a href="http://localhost/8080/beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="http://localhost:8080/beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;登录</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/sign"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;注册</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%> <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
@@ -149,10 +149,11 @@
     <a href="http://localhost:8080/SpringMVC/forum/1?enlighten=false" class="btn btn-success fineBtn" ><i class="fa fa-arrow-left"></i> 返回 </a>
 </div>
 <div id="forumTop">
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 新闻推荐 <span class="badge" style="background-color:#A1A1A1;">70</span></a>
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 旅游推荐 <span class="badge" style="background-color:#A1A1A1;">120</span></a>
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 活动推荐 <span class="badge" style="background-color:#A1A1A1;">80</span></a>
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 热门帖子 <span class="badge" style="background-color:#A1A1A1;">110</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 新闻推荐 <span class="badge" style="background-color:#A1A1A1;">6</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 旅游推荐 <span class="badge" style="background-color:#A1A1A1;">4</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 活动推荐 <span class="badge" style="background-color:#A1A1A1;">5</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 吐槽灌水 <span class="badge" style="background-color:#A1A1A1;">1</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 热门帖子 <span class="badge" style="background-color:#A1A1A1;">2</span></a>
 </div>
 <div class="container forumContent">
     <div id="forumContentContainer"></div>
@@ -209,6 +210,9 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)">活动推荐</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">吐槽灌水</a>
                             </li>
                         </ul>
                     </div><!-- /btn-group -->

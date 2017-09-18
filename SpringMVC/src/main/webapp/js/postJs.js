@@ -31,7 +31,7 @@ function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,fl
 	right.addClass("right");
 	
 	var head=$('<div></div>');
-	var headpic=$('<image src=images/head.jpg/>');
+	var headpic=$('<image src="http://localhost:8080/SpringMVC/personalIcon/'+userId+'.jpg" onerror="javascript:this.src=\'http://localhost:8080/SpringMVC/indexImage/indexImg.jpg\'" >');
 	var name=$('<div></div>');
 	var level=$('<div></div>');
 	left.append(head);
@@ -232,7 +232,7 @@ function createResponse(userName,responseId,content,time,floorId,contentId,floor
 	responseTime.html(time)
 	$('#response1'+floorNumber).append(response2);
 	
-	var responseHeadPic=$('<image src=images/head.jpg style="width:60%;"/>');
+	var responseHeadPic=$('<image src="http://localhost:8080/SpringMVC/personalIcon/'+responseId+'.jpg" onerror="javascript:this.src=\'http://localhost:8080/SpringMVC/indexImage/indexImg.jpg\'" style="width:60%;"/>');
 	responseHead.append(responseHeadPic);
 	
 	delete_a1.attr("onclick","deleteResponse(\""+contentId+"\",this)");
@@ -289,22 +289,6 @@ function deleteResponse(contentId,val){
 
 
 
-function creatPageCol(pageNum,pageIndex,themeId){
-	var node='';
-	for(var i=0;i<pageNum;i++){
-		node+='<li><a href="http://localhost:8080/SpringMVC/read?ID='+themeId+'&pageIndex='+(i+1)+'">'+(i+1)+'</a></li>';
-	}
-	if(parseInt(pageIndex)!=1){
-		location.href = "#firstAnchor";
-	}
-	if(parseInt(pageNum)!=1&&parseInt(pageIndex)!=parseInt(pageNum)){
-		node+='<li><a href="http://localhost:8080/SpringMVC/read?ID='+themeId+'&pageIndex='+pageIndex+'">下一页 &rarr;</a></li>';
-	}
-	$('.forumPagination').append(node);
-	$('.forumPagination > li:eq('+(parseInt(pageIndex)-1)+')').addClass("focus");
-	if(parseInt(pageIndex)!=1){
-		$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/read?ID='+themeId+'&pageIndex='+pageIndex+'"">&larr; 上一页</a></li>');
-	}
-}
+
 
 

@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/baidu/ueditor/um/Uploader.java=UTF-8
 encoding//src/main/java/com/forum/controller/forumController.java=UTF-8
+encoding//src/main/java/com/forum/page/FloorTimeHandle.java=GBK
 encoding//src/main/java/com/forum/page/PointChange.java=UTF-8
 encoding//src/main/java/com/forum/page/SearchRefresh.java=UTF-8
 encoding//src/main/java/com/forum/page/TimeHandle.java=UTF-8

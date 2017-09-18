@@ -11,6 +11,7 @@ public class Refresh {
 	PreparedStatement sql = null;
 	ResultSet rs;
 	TimeHandle time=new TimeHandle();
+	FloorTimeHandle FloorTime=new FloorTimeHandle();
 	String json="";
 	String sqlStm = null;
 	public Refresh(){

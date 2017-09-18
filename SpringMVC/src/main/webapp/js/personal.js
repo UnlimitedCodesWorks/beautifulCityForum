@@ -359,7 +359,7 @@ function password(){
 
 function creatCol(emailId,senderId,senderName,content,time){
 	var node='<div class="row emailRow" style="height:50px"><div class="col-lg-1 col-md-1 emailCol">';
-     node+='<img src="http://localhost:8080/SpringMVC/personalIcon/'+senderId+'.jpg" style="width:50px;height:50px" >';
+     node+='<img src="http://localhost:8080/SpringMVC/personalIcon/'+senderId+'.jpg" onerror="javascript:this.src=\'http://localhost:8080/SpringMVC/indexImage/indexImg.jpg\'" style="width:50px;height:50px" >';
 	 node+='</div><div class="col-lg-8 col-md-8 emailCol">';
 	 node+='<a href="http://localhost:8080/SpringMVC/personal/'+senderId+'">'+senderName+':</a>'+content;
 	 node+='</div><div class="col-lg-2 col-md-2 emailCol">'+time+'</div> <div class="col-lg-1 col-md-1 emailCol" emailData="'+emailId+'" ><a href="javascript:void(0)" onclick="mailDelete(this)" >删除</a>';

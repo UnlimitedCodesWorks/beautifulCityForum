@@ -16,14 +16,14 @@
                   + path + "/";
 %>
 <%
-	String themeId=request.getParameter("ID");
+	String themeId=request.getParameter("id");
 	Connection con=null;
 	PreparedStatement sql;
 	ResultSet rs;
 	String driver="com.mysql.jdbc.Driver";
 		String url="jdbc:mysql://localhost:3306/countryforum?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		String user="root";
-		String password="13750984796";
+		String password="15869105934";
 		try {
 			Class.forName(driver);
 			con=DriverManager.getConnection(url,user,password);
@@ -91,16 +91,6 @@
 		int labelNumber=rowSet1.getRow();
 		
 		
-		
-
-		
-		CachedRowSetImpl rowSet=new CachedRowSetImpl();
-		sql=con.prepareStatement("select floorUserId,floor.floorId,floorTime,floorContent,userName,userPoints from floor,themefloor,user where themeId=? and themefloor.floorId=floor.floorId and floor.floorUserId=userId order by floor.floorTime ");
-		sql.setString(1,themeId);
-		rs=sql.executeQuery();
-		rowSet.populate(rs);
-		rowSet.last();
-		int number=rowSet.getRow();
 
  %>
 <!DOCTYPE html>
@@ -156,39 +146,16 @@
                 </li>
             </ul>
             <ul class="pagination forumPagination">
-                <li>
-                     <a href="#"><<</a>
-                </li>
-                <li>
-                     <a href="#">1</a>
-                </li>
-                <li>
-                     <a href="#">2</a>
-                </li>
-                <li>
-                     <a href="#">3</a>
-                </li>
-                <li>
-                     <a href="#">4</a>
-                </li>
-                <li>
-                     <a href="#">...</a>
-                </li>
-                <li>
-                     <a href="#">尾页</a>
-                </li>
-                <li>
-                     <a href="#">>></a>
-                </li>
+                
             </ul>
         </div>
     </div>
     
     
     
-    	<div class="floor1">
+    	<div class="floor1" id="firstFloor">
     		<div class="left">
-    			<div class="head"><img alt="140x140" src="images/head.jpg" /></div>
+    			<div class="head"><img alt="140x140" src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" /></div>
     			<div class="name"><a href="http://localhost:8080/SpringMVC/personal/<%=postUserId %>"><%=userName %></a><a  class="ban" onclick="ban(<%=postUserId %>,this)" >&nbsp[<i class="glyphicon glyphicon-ban-circle"></i>禁言]</a></div>
     			<div class="level">用户组：<%=title1 %></div>
     		</div>
@@ -331,19 +298,38 @@
 	
 	var json='${postPage}';
 	var pageIndex='${pageIndex}';
-	pageIndex=parseInt(pageIndex);
-	var pageIndex='${pageIndex}';
 	var pageNum='${pageNum}';
 	var themeId="<%=themeId%>";
 	var postJson=JSON.parse(json);
-
-    $('#floor').html("");
-for(var i=0;i<postJson.length;i++){
-   		createFloor(postJson[i].userName,postJson[i].floorUserId,postJson[i].floorContent,postJson[i].floorTime,i+1,postJson[i].userPoints,postJson[i].floorId)
+for(var i=0;i<postJson.post.length;i++){
+   		createFloor(postJson.post[i].userName,postJson.post[i].floorUserId,postJson.post[i].floorContent,postJson.post[i].floorTime,postJson.post[i].floorNumber,postJson.post[i].userTitle,postJson.post[i].floorId);
    	}
-    
+
     creatPageCol(pageNum,pageIndex,themeId);
+    if(pageIndex!=1){
+    	$("#firstFloor").hide();
+    }
     
+    
+    
+     <%
+		rowSet1.absolute(1);
+		boolean boo1=true;
+		for(int i=1;i<=labelNumber&&boo1;i++){
+				String labelName=rowSet1.getString("labelName");   
+
+	%>
+				var labelName="<%=labelName%>";
+				var labelNames=$('<a></a>');
+				labelNames.html("["+labelName+"]");
+				$('#labelName').append(labelNames)
+				labelNames.attr("href","#");
+
+	<%
+			boo1=rowSet1.next();
+		}
+
+    %>
     
     function response(){
 	var content=UM.getEditor('myEditor').getContent();
@@ -405,7 +391,7 @@ function responseFloor(floorId,i){
 			var floorId=data.floorId;
 			var contentId=data.contentId;
 			var floornumber1=data.floorNumber;
-		createResponse(userName,userId,content,time,floorId,contentId,floorNumber1)
+		createResponse(userName,userId,content,time,floorId,contentId,floorNumber1);
 			
 		},
 		error: function(jqXHR){
@@ -419,7 +405,24 @@ function responseFloor(floorId,i){
 	
 }
 	
+function creatPageCol(pageNum,pageIndex,themeId){
 
+	var node='';
+	for(var i=0;i<pageNum;i++){
+		node+='<li><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'&pageIndex='+(i+1)+'">'+(i+1)+'</a></li>';
+	}
+	if(parseInt(pageIndex)!=1){
+		location.href = "#firstAnchor";
+	}
+	if(parseInt(pageNum)!=1&&parseInt(pageIndex)!=parseInt(pageNum)){
+		node+='<li><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'&pageIndex='+(parseInt(pageIndex)+1)+'">下一页 &rarr;</a></li>';
+	}
+	$('.forumPagination').append(node);
+	$('.forumPagination > li:eq('+(parseInt(pageIndex)-1)+')').addClass("focus");
+	if(parseInt(pageIndex)!=1){
+		$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'&pageIndex='+(parseInt(pageIndex)-1)+'"">&larr; 上一页</a></li>');
+	}
+}
 
 
 	var b="<%=b%>";

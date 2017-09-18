@@ -60,7 +60,7 @@ public class forumController {
 			driver="com.mysql.jdbc.Driver";
 			url="jdbc:mysql://localhost:3306/countryforum?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 			user="root";
-			password="13750984796";
+			password="15869105934"; 
 			try {
 				Class.forName(driver);
 				con=DriverManager.getConnection(url,user,password);
@@ -141,6 +141,8 @@ public class forumController {
 				ResultSet rs;
 				PreparedStatement sql;
 				request.setCharacterEncoding("UTF-8");
+				HttpSession session=request.getSession();
+				LoginBean login=(LoginBean)session.getAttribute("userBean");
 				UUID uuid=UUID.randomUUID();
 				String theme=request.getParameter("theme");
 				String themeClass=request.getParameter("themeClass");
@@ -148,10 +150,10 @@ public class forumController {
 				Date now=new Date();
 				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String nowTime=dateFormat.format(now);
-				String userId="123";
+				String userId=login.getUserId();
 				String themeId=uuid.toString().replace("-", "");
 				if(theme!=null&&themeClass!=null&&themeContent!=null){
-					sql=con.prepareStatement("insert into theme values (?,?,?,?,?,0,0)");
+					sql=con.prepareStatement("insert into theme values (?,?,?,?,?,0,0,1)");
 					sql.setString(1,themeId);
 					sql.setString(2,theme);
 					sql.setString(3,userId);
@@ -409,13 +411,16 @@ public class forumController {
 			return "hello";
 		}
 		@RequestMapping(value="/read",method=RequestMethod.GET)
-			public String readServlet(@RequestParam(value="ID",required=true) String ID,@RequestParam(value="pageIndex",required=false) String pageIndex,ModelMap model,HttpServletRequest request) throws SQLException{
+			public String readServlet(@RequestParam(value="id",required=true) String id,@RequestParam(value="pageIndex",required=false) String pageIndex,ModelMap model,HttpServletRequest request) throws SQLException{
 			
 			try {
 				ResultSet rs;
 				PreparedStatement sql;
+				if(pageIndex==null){
+					pageIndex="1";
+				}
 				int pageIndex1=Integer.parseInt(pageIndex);
-				String themeId=ID;	
+				String themeId=id;	
 			 	String json;
 			 	System.out.println(pageIndex1);
 			 	System.out.println(themeId);
@@ -424,25 +429,24 @@ public class forumController {
 						sql.setString(1,themeId);
 						rs=sql.executeQuery();
 						rs.last();
-						int tatalRecoder=rs.getRow();
+						int totalRecoder=rs.getRow();
 						rs.first();
 						int pageNum=0;
-						System.out.println(tatalRecoder);
-						if(tatalRecoder%8==0){
-							pageNum=tatalRecoder/8;
+						
+						if(totalRecoder%5==0){
+							pageNum=totalRecoder/5;
 						}else{
-							pageNum=tatalRecoder/8+1;
+							pageNum=totalRecoder/5+1;
 						}
-							
-						int startIndex=8*pageIndex1-7;
-						int endIndex=8*pageIndex1;
+						System.out.println("total:"+pageNum);
+						int startIndex=5*pageIndex1-4;
+						int endIndex=5*pageIndex1;
 						ReadRefresh read=new ReadRefresh();
 						json=read.refresh(startIndex, endIndex,themeId);
 						model.addAttribute("postPage",json);
-						model.addAttribute("pageIndex",pageIndex);
-						model.addAttribute("postNum",pageNum);
+						model.addAttribute("pageIndex",pageIndex1);
+						model.addAttribute("pageNum",pageNum);
 						System.out.println(json);
-	
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

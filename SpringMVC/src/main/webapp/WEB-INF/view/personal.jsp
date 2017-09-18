@@ -27,7 +27,7 @@
         </ul>
         <ul id="BannerRight">
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
-            <li><a href="http://localhost/8080/beautifulCity/index">首页</a></li>
+            <li><a href="http://localhost:8080/beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
             <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
@@ -106,7 +106,7 @@
                             <img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" style="width:198px;height:198px;display:inline-block;">
                         </div>
                         <div class="imgContainer" style="display:none">
-                            <img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'"  alt="头像">
+                            <img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" >
                         </div>
                         <label  class="importDiv" style="display:none" for="inputImage" title="Upload image file">
                         <input  id="inputImage" name="file" type="file" accept="image/*">
