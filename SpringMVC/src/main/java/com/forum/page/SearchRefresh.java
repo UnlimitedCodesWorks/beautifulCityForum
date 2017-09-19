@@ -16,7 +16,7 @@ public class SearchRefresh extends Refresh{
 				sql=con.prepareStatement(sqlStm);
 				sql.setString(1,"%"+searchContent+"%");
 			}else if(searchClass.equals("按标签搜索")){
-				sqlStm="select theme.themeId,themeTime,themeName,userName,enlighten,userId from theme,label,themelabel,user where theme.themeId=themelabel.themeId and label.labelId=themelabel.labelId and postUserId=userId and hide=1 and labelName=? order by themeTime desc limit "+(startIndex-1)+","+(endIndex-startIndex+1);
+				sqlStm="select theme.themeId,themeTime,themeName,userName,enlighten,userId,accept,recommend from theme,label,themelabel,user where theme.themeId=themelabel.themeId and label.labelId=themelabel.labelId and postUserId=userId and hide=1 and labelName=? order by themeTime desc limit "+(startIndex-1)+","+(endIndex-startIndex+1);
 				sql=con.prepareStatement(sqlStm);
 				sql.setString(1,searchContent);
 			}else if(searchClass.equals("按用户主题搜索")){
@@ -33,7 +33,9 @@ public class SearchRefresh extends Refresh{
 						+"\"userId\":\""+rs.getString("userId")+"\","
 						+"\"userName\":\""+rs.getString("userName")+"\","
 						+"\"themeTime\":\""+themeTime+"\","
-						+"\"enlighten\":\""+rs.getInt("enlighten")+"\",";
+						+"\"enlighten\":\""+rs.getInt("enlighten")+"\","
+						+"\"accept\":\""+rs.getInt("accept")+"\","
+						+"\"recommend\":\""+rs.getInt("recommend")+"\",";
 				sql=con.prepareStatement("select count(*) as reply from themefloor where themeId=?");
 				sql.setString(1, rs.getString("themeId"));
 				ResultSet rs_1=sql.executeQuery();

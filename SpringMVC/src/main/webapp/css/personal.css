@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-08-07 13:18:32
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-09-07 19:38:57
+* @Last Modified time: 2017-09-18 20:53:59
 */
 body{
     font-family:'Microsoft YaHei';
@@ -113,7 +113,7 @@ body{
 }
 #personalBody{
     width:100%;
-    height:880px;
+    height:1080px;
     background-color:#F2F2F2;
     padding:40px 50px;
 }
@@ -127,7 +127,7 @@ body{
     color:white;
     position:relative;
 }
-.change,.changeImg,.send{
+.change,.changeImg,.send,.tipBtn{
     float: right;
     display:inline-block;
     margin-top:8px;
@@ -399,17 +399,18 @@ body{
     color:#929191;
     font-size:14px;
 }
-.emailFooter{
+.emailFooter , .tipFooter{
     width:100%;
     height:30px;
     line-height:30px;
     margin-top:20px;
     text-align:left;
 }
-.emailFooter a{
+.emailFooter a , .tipFooter a{
     display:inline-block;
     margin-right:10px;
 }
+
 .focus{
 	text-decoration: underline;
 }
@@ -446,4 +447,16 @@ body{
 	font-size:18px;
 	color:#A8A7A7;
     margin-top:10px;
+}
+.fa-bookmark{
+    color:rgb(255,204,102);
+    margin-right:10px;
+}
+.tipRow{
+    height:33px;
+    font-size:15px;
+    line-height:33px;
+}
+.tipDelete{
+	display:none;
 }

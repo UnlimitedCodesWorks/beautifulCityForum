@@ -26,7 +26,9 @@ public class PageRefresh extends Refresh {
 					+"\"userId\":\""+rs.getString("userId")+"\","
 					+"\"userName\":\""+rs.getString("userName")+"\","
 					+"\"themeTime\":\""+themeTime+"\","
-					+"\"enlighten\":\""+rs.getInt("enlighten")+"\",";
+					+"\"enlighten\":\""+rs.getInt("enlighten")+"\","
+					+"\"accept\":\""+rs.getInt("accept")+"\","
+					+"\"recommend\":\""+rs.getInt("recommend")+"\",";
 			sql=con.prepareStatement("select count(*) as reply from themefloor where themeId=?");
 			sql.setString(1, rs.getString("themeId"));
 			ResultSet rs_1=sql.executeQuery();

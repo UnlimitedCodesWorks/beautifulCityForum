@@ -69,7 +69,7 @@ $(document).ready(function(){
                		for(var j=0;j<data.themes[i].label.length;j++){
                			labelArray.push(data.themes[i].label[j]);
                		}
-               		creatCol(data.themes[i].reply,labelArray,data.themes[i].themeName,data.themes[i].userName,data.themes[i].themeTime,data.themes[i].floorTime,data.themes[i].floorName,data.themes[i].enlighten,data.themes[i].userId,data.themes[i].floorId,data.themes[i].themeId);
+               		creatCol(data.themes[i].reply,labelArray,data.themes[i].themeName,data.themes[i].userName,data.themes[i].themeTime,data.themes[i].floorTime,data.themes[i].floorName,data.themes[i].enlighten,data.themes[i].userId,data.themes[i].floorId,data.themes[i].themeId,data.themes[i].accept,data.themes[i].recommend);
                	}
             	pageIndex++;
            		$('#pageIndex').val(pageIndex);
@@ -90,6 +90,14 @@ $(document).ready(function(){
            			$("#forumContentContainer").css('overflow','visible');
            		},1000);
            		$("[data-toggle='tooltip']").tooltip({html:true});
+           		$(".chargeDiv i").click(function(e){
+           		   var value=$(this).attr("data-original-title");
+           		   var parentNode=$(this).parent();
+           		   $("#mymodal-body").html('您确认要<span style="color:red;font-weight:bold;" >'+value+'</span>该主题吗？');
+           		   $("#modalClass").val(value);
+           		   $("#modalId").val(parentNode.attr("title"));
+           		   $('#myModal').modal('show');
+           	   });
             },
             error: function(jqXHR){
                alert("发生错误：" + jqXHR.status);
@@ -103,7 +111,7 @@ $(document).ready(function(){
 	   var reg=/"/g;
 	   var themeClass=$('#themeClass').val();
 	   var theme=$("#theme").val();
-	   content=content.replace(reg,'&quot;');
+	   content=content.replace(reg,' ');
 	   $("#postContent").val(content);
 	   if(content==""){
 		   e.preventDefault();
@@ -218,7 +226,7 @@ function creatTopCol(labelName,themeName,themeId){
 	  $('.topTable:eq(2)').append(node);
   }
 }
-function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,enlighten,userId,floorId,themeId){
+function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,enlighten,userId,floorId,themeId,accept,recommend){
 	var node='<div class="row forumContentRow"><div class="col-md-1 col-lg-1 forumContentCol"><div class="forumContentCol_1 btn btn-primary">'
 		+reply+'</div></div><div class="col-md-7 col-lg-7 forumContentCol"><div class="forumContentCol_2">';
 	 for(var i=0;i<label.length;i++){
@@ -227,6 +235,12 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'"class="label_2">'+themeName+'</a>';
 	if(parseInt(enlighten)==1){
 		node+='<i class="enlighten">精</i>';
+	}
+	if(parseInt(recommend)>=100){
+		node+='<i class="recommend">荐</i>';
+	}
+	if(accept=='1'){
+		node+='<i class="accept">编辑采用</i><i class="fa fa-database" style="margin-left:10px;"></i><i class="point">+50</i>';
 	}
 	if(userIdentity=='1'){
 		node+='<div class="chargeDiv" title="'+themeId+'">';

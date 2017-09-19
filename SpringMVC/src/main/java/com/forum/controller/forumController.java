@@ -45,6 +45,7 @@ import com.forum.page.PointChange;
 import com.forum.page.ReadRefresh;
 import com.forum.page.SearchRefresh;
 import com.forum.page.TimeHandle;
+import com.forum.page.TipRefresh;
 import com.forum.page.UnreadNews;
 
 @Controller
@@ -123,6 +124,41 @@ public class forumController {
 				}else{
 					model.addAttribute("pageNum",1);
 				}
+				String hotNum;
+				String newsNum;
+				String tourNum;
+				String activeNum;
+				String nobNum;
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='热门帖子'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					hotNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("hotNum", hotNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='新闻推荐'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					newsNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("newsNum", newsNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='旅游推荐'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					tourNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("tourNum", tourNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='活动推荐'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					activeNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("activeNum", activeNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='吐槽灌水'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					nobNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("nobNum", nobNum);
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -135,6 +171,7 @@ public class forumController {
 			model.addAttribute("pageIndex",pageIndex);
 			return "thread";
 		}
+		
 		@RequestMapping(value="/pageContent",method=RequestMethod.POST)
 		 public void pageContent(HttpServletRequest request,HttpServletResponse response){
 			try {
@@ -153,7 +190,7 @@ public class forumController {
 				String userId=login.getUserId();
 				String themeId=uuid.toString().replace("-", "");
 				if(theme!=null&&themeClass!=null&&themeContent!=null){
-					sql=con.prepareStatement("insert into theme values (?,?,?,?,?,0,0,1)");
+					sql=con.prepareStatement("insert into theme values (?,?,?,?,?,0,0,1,0,0)");
 					sql.setString(1,themeId);
 					sql.setString(2,theme);
 					sql.setString(3,userId);
@@ -323,9 +360,13 @@ public class forumController {
 			}
 			if(!b){
 				String json;
+				String tipJson;
 				EmailRefresh email=new EmailRefresh();
+				TipRefresh tip=new TipRefresh();
 				json=email.refresh(1, 4, login.getUserId());
+				tipJson=tip.refresh(1,8,login.getUserId());
 				model.addAttribute("json", json);
+				model.addAttribute("tipJson", tipJson);
 				int num=0;
 				int pageNum=0;
 				try {
@@ -341,12 +382,24 @@ public class forumController {
 						pageNum=num/4+1;
 					}
 					model.addAttribute("pageNum", pageNum);
+					sql=con.prepareStatement("select count(*) from tip,theme where tip.themeId=theme.themeId and userId=? ");
+					sql.setString(1, login.getUserId());
+					rs=sql.executeQuery();
+					if(rs.next()){
+						num=rs.getInt(1);
+					}
+					if(num%8==0){
+						pageNum=num/8;
+					}else{
+						pageNum=num/8+1;
+					}
+					model.addAttribute("tipNum", pageNum);
+					UnreadNews unread=new UnreadNews();
+					unread.find(login.getUserId(), session);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				UnreadNews unread=new UnreadNews();
-				unread.find(login.getUserId(), session);
 			}
 			return "personal";
 		}
@@ -422,8 +475,6 @@ public class forumController {
 				int pageIndex1=Integer.parseInt(pageIndex);
 				String themeId=id;	
 			 	String json;
-			 	System.out.println(pageIndex1);
-			 	System.out.println(themeId);
 						
 			 	sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime  desc");
 						sql.setString(1,themeId);
@@ -446,7 +497,6 @@ public class forumController {
 						model.addAttribute("postPage",json);
 						model.addAttribute("pageIndex",pageIndex1);
 						model.addAttribute("pageNum",pageNum);
-						System.out.println(json);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -541,10 +591,6 @@ public class forumController {
 				String userName=request.getParameter("userName");
 				String password=request.getParameter("password");
 				String repassword=request.getParameter("repassword");
-				System.out.println(userId);
-				System.out.println(userName);
-				System.out.println(password);
-				System.out.println(repassword);
 				PrintWriter out = response.getWriter();
 			 	StringBuffer json=new StringBuffer();
 			 	String result;
@@ -1077,21 +1123,51 @@ public class forumController {
 			String editClass=request.getParameter("editClass");
 			String themeId=request.getParameter("themeId");
 			PreparedStatement sql = null;
+			ResultSet rs=null;
 			String sqlStm=null;
+			String stm=null;
+			String userId = null;
+			UUID uuid=UUID.randomUUID();
+			String tipId=uuid.toString().replace("-", "");
+			Date now=new Date();
+			SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String nowTime=dateFormat.format(now);
+			try {
+				sql=con.prepareStatement("select postUserId from theme where themeId=?");
+				sql.setString(1, themeId);
+				rs=sql.executeQuery();
+				if(rs.next()){
+					userId=rs.getString("postUserId");
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if(editClass.equals("加精")){
 				sqlStm="update theme set enlighten=1 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'加精')";
 			}else if(editClass.equals("置顶")){
 				sqlStm="update theme set stick=1 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'置顶')";
 			}else if(editClass.equals("删除")){
 				sqlStm="update theme set hide=0 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'删除')";
 			}else if(editClass.equals("取消加精")){
 				sqlStm="update theme set enlighten=0 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'取消加精')";
 			}else if(editClass.equals("取消置顶")){
 				sqlStm="update theme set stick=0 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'取消置顶')";
 			}
 			try{
 				sql=con.prepareStatement(sqlStm);
 				sql.setString(1, themeId);
+				sql.executeUpdate();
+				sql=con.prepareStatement(stm);
+				sql.setString(1, tipId);
+				sql.setString(2, themeId);
+				sql.setString(3, userId);
+				sql.setString(4, nowTime);
 				sql.executeUpdate();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out_1 = response.getWriter();
@@ -1110,21 +1186,58 @@ public class forumController {
 			PreparedStatement sql = null;
 			try{
 				for(int i=0;i<themesId.length;i++){
+					ResultSet rs=null;
+					String userId = null;
+					UUID uuid=UUID.randomUUID();
+					String tipId=uuid.toString().replace("-", "");
+					Date now=new Date();
+					SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String nowTime=dateFormat.format(now);
+					sql=con.prepareStatement("select postUserId from theme where themeId=?");
+					sql.setString(1, themesId[i]);
+					rs=sql.executeQuery();
+					if(rs.next()){
+						userId=rs.getString("postUserId");
+					}
 					if(editClass.equals("加精")){
 						sql=con.prepareStatement("update theme set enlighten=1 where themeId=?");
 						sql.setString(1, themesId[i]);
+						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'加精')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
 						sql.executeUpdate();
 					}else if(editClass.equals("置顶")){
 						sql=con.prepareStatement("update theme set stick=1 where themeId=?");
 						sql.setString(1, themesId[i]);
 						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'置顶')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
+						sql.executeUpdate();
 					}else if(editClass.equals("删除")){
 						sql=con.prepareStatement("update theme set hide=0 where themeId=?");
 						sql.setString(1, themesId[i]);
 						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'删除')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
+						sql.executeUpdate();
 					}else if(editClass.equals("取消加精")){
 						sql=con.prepareStatement("update theme set enlighten=0 where themeId=?");
 						sql.setString(1, themesId[i]);
+						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'取消加精')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
 						sql.executeUpdate();
 					}
 				}
@@ -1256,5 +1369,53 @@ public class forumController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		@RequestMapping(value="/tipPageAjax",method=RequestMethod.POST)
+		public void tipPageAjax(HttpServletRequest request, HttpServletResponse response){
+			int pageIndex=Integer.parseInt(request.getParameter("pageIndex"));
+			HttpSession session=request.getSession();
+			LoginBean login=(LoginBean) session.getAttribute("userBean");
+			String json;
+			int startIndex=8*pageIndex-7;
+			int endIndex=8*pageIndex;
+			TipRefresh tip=new TipRefresh();
+			json=tip.refresh(startIndex, endIndex, login.getUserId());
+			response.setCharacterEncoding("UTF-8");
+			try {
+				PrintWriter out = response.getWriter();
+				out.print(json);
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		@RequestMapping(value="/tipDeleteAjax",method=RequestMethod.POST)
+		public void tipDeleteAjax(HttpServletRequest request, HttpServletResponse response){
+			String tipId=request.getParameter("tipsId");
+			String[] tipsId=tipId.split(",");
+			PreparedStatement sql;
+			for(int i=0;i<tipsId.length;i++){
+				try {
+					sql=con.prepareStatement("delete from tip where tipId=? ");
+					sql.setString(1, tipsId[i]);
+					sql.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = null;
+			try {
+				out = response.getWriter();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			out.print("{\"success\":true}");
+			out.flush();
+			out.close();
 		}
 }

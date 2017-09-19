@@ -19,7 +19,7 @@
      <div id="TopBanner">
         <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村论坛</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href=""><i class="fa fa-search"></i> 搜索结果</a></li>
         </ul>
         <ul id="BannerRight">
@@ -100,7 +100,7 @@
    		for(var j=0;j<themeArray.themes[i].label.length;j++){
    			labelArray.push(themeArray.themes[i].label[j]);
    		}
-   		creatCol(themeArray.themes[i].reply,labelArray,themeArray.themes[i].themeName,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].floorTime,themeArray.themes[i].floorName,themeArray.themes[i].enlighten,themeArray.themes[i].userId,themeArray.themes[i].floorId,themeArray.themes[i].themeId);
+   		creatCol(themeArray.themes[i].reply,labelArray,themeArray.themes[i].themeName,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].floorTime,themeArray.themes[i].floorName,themeArray.themes[i].enlighten,themeArray.themes[i].userId,themeArray.themes[i].floorId,themeArray.themes[i].themeId,themeArray.themes[i].accept,themeArray.themes[i].recommend);
    		}
 	}
    	var b="<%=b%>";

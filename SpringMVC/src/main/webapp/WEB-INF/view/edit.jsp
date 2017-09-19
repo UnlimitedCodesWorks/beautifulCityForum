@@ -25,7 +25,7 @@
     <div id="TopBanner">
         <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村论坛</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href="#"><i class="glyphicon glyphicon-edit"></i> 编辑帖子</a></li>
         </ul>
         <ul id="BannerRight">

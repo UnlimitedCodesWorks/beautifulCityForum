@@ -22,7 +22,7 @@
     <div id="TopBanner">
         <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村论坛</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href="#" class="personalHref" ><i class="glyphicon glyphicon-user"></i> 个人信息</a></li>
         </ul>
         <ul id="BannerRight">
@@ -119,12 +119,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <div class="personalBodyTop" style="background-color:#BA9F08; margin-top: 50px;">
-                        ${userId}发布的帖子 <i class="fa fa-edit"></i>
+                <div class="col-lg-6 col-md-6 tip">
+                    <div class="personalBodyTop" style="background-color:rgb(198,26,22);margin-top: 50px;">
+                        ${userName}的提醒消息 <i class="fa fa-bell"></i>
+                        <button type="button" class="btn btn-default tipBtn" id="tipDeleteArray" >批量删除</button>
                     </div>
-                     <div class="personalContent">
-                      <a href="#" class="personalLink" >[搜索${userName}发布的主题]</a> <a href="#" class="personalLink" >[搜索${userName}发布的回复]</a>
+                    <div class="personalContent" style="position: relative;">
+                    <div class="tipContainer" style="width:100%;">
+                        	<div class="emailIndex">暂无提醒消息</div>
+                     </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 email">
@@ -151,6 +154,16 @@
                                     <button type="button" class="btn btn-primary" id="emailBtn" >发送</button>
                                 </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="personalBodyTop" style="background-color:#BA9F08; margin-top: 50px;">
+                        ${userId}发布的帖子 <i class="fa fa-edit"></i>
+                    </div>
+                     <div class="personalContent">
+                      <a href="#" class="personalLink" >[搜索${userName}发布的主题]</a> <a href="#" class="personalLink" >[搜索${userName}发布的回复]</a>
                     </div>
                 </div>
             </div>
@@ -249,9 +262,13 @@
 	var userPassword="<%=userBean.getPassword()%>";
 	var verifyCode = new GVerify("Verify");
 	var json='${json}';
+	var tipJson='${tipJson}';
 	var pageNum='${pageNum}';
+	var tipNum='${tipNum}';
 	pageNum=parseInt(pageNum);
+	tipNum=parseInt(tipNum);
 	var pageIndex=1;
+	var tipIndex=1;
 	$("#userId").val(userId);
 	$("#personalSignature").val(userRemark);
 	var url_1="http://localhost:8080/SpringMVC/search?searchContent="+userId+"&searchClass=按用户主题搜索";
@@ -270,9 +287,11 @@
 		$("#exit").hide();
 		$("#editPassword").hide();
 		$(".email").hide();
+		$(".tip").hide();
+		$('#personalBody').css("height","560px");
 	}else{
 		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");		 
+		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
 		if(userId_1!=userId){
 			$(".change:eq(0)").hide();
 			$("#changeIcon").hide();
@@ -290,9 +309,17 @@
 		}
 		creatPageCol(pageNum,pageIndex);
 	}
+	if(tipJson!='{"tips":]}'&&tipJson!=''){
+		var tipArray=JSON.parse(tipJson);
+		$(".tipContainer:eq(0)").html("");
+		for(var i=0;i<tipArray.tips.length;i++){
+			creatTipCol(tipArray.tips[i].themeId,tipArray.tips[i].themeName,tipArray.tips[i].time,tipArray.tips[i].type,tipArray.tips[i].tipId);
+		}
+		creatTipPageCol(tipNum,tipIndex);
+	}
 	var unReadNum="<%=userBean.getUnreadNews()%>";
 	if(unReadNum=='0'){
-		$(".unread").hide();	
+		$(".unread").hide();
 	}else{
 		$(".unread").show();
 		$(".unread").text(unReadNum);

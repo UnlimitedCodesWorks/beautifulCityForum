@@ -214,3 +214,33 @@ body{
     background-color:#F2F2F2;
     cursor:pointer;
 }
+.accept{
+	width:70px;
+	height:25px; 
+	margin-left:10px;
+	display:inline-block;
+	border-radius:20%;
+    color:red;
+    border:1px solid red;
+    text-align:center;
+    line-height:25px;
+    font-size:13px; 
+    font-style:normal;
+}
+.fa-database{
+	color:rgb(255,204,102);
+}
+.recommend{
+	width:30px;
+	height:25px;
+	display:inline-block;
+    border-radius:30%;
+    color:white;
+    background:rgb(255,174,6);
+    text-align:center;
+    line-height:25px;
+    font-size:15px;
+    font-style:normal;
+    font-weight:700;
+    margin-left:10px; 
+}
