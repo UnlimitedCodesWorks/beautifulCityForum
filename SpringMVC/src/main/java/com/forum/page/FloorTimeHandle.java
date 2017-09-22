@@ -20,11 +20,11 @@ public class FloorTimeHandle {
 			double minute=interval*1.0/(1000*60);
 			double hour=interval*1.0/(1000*60*60);
 			if(second<60){
-				output=""+(int)second+"��ǰ";
+				output=""+(int)second+"秒前";
 			}else if(minute<60){
-				output=""+(int)minute+"����ǰ";
+				output=""+(int)minute+"分钟前";
 			}else if(hour<24){
-				output=""+(int)hour+"Сʱǰ";
+				output=""+(int)hour+"小时前";
 			}else{
 				output=endTime;
 			}

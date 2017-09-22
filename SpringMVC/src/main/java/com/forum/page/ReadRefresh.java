@@ -1,5 +1,6 @@
 package com.forum.page;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ReadRefresh extends Refresh {
@@ -10,20 +11,16 @@ public class ReadRefresh extends Refresh {
 		String json="{\"post\":[";
 		
 			sqlStm="select floorUserId,floor.floorId,floorTime,floorContent,userName,userPoints from floor,themefloor,user where themeId=? and themefloor.floorId=floor.floorId and floor.floorUserId=userId order by floor.floorTime limit "+(startIndex-1)+","+(endIndex-startIndex+1);
-		
+			
 		try{
 			
 
-			sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime  desc");
-			sql.setString(1,themeId);
-			rs=sql.executeQuery();
-
 			int floorNumber;		
-			System.out.println("start"+startIndex);
-			System.out.println("end"+endIndex);
 		sql=con.prepareStatement(sqlStm);
 		sql.setString(1,themeId);
 		rs=sql.executeQuery();
+		if(rs.next()){
+			rs.beforeFirst();
 		while(rs.next()){
 			floorNumber=Integer.parseInt(rs.getString("floorId").substring(rs.getString("floorId").indexOf(",")+1));
 			int userPoints=rs.getInt("userPoints");
@@ -31,10 +28,18 @@ public class ReadRefresh extends Refresh {
 			String userTitle=point.handle(userPoints);
 			String floorTime=rs.getString("floorTime");
 			floorTime=FloorTime.handle(floorTime);
+			
+			sql=con.prepareStatement("select contentId from userresponse where floorId=?");
+			sql.setString(1,rs.getString("floorId"));
+			ResultSet rs1 = sql.executeQuery();
+			rs1.last();
+			int responseNumber=rs1.getRow();
+			System.out.println("response"+responseNumber);
 			json+="{\"floorUserId\":\""+rs.getString("floorUserId")+"\","
 					+"\"floorId\":\""+rs.getString("floorId")+"\","
 					+"\"userName\":\""+rs.getString("userName")+"\","
 					+"\"floorNumber\":\""+floorNumber+"\","
+					+"\"responseNumber\":\""+responseNumber+"\","
 					+"\"userTitle\":\""+userTitle+"\","
 					+"\"floorContent\":\""+rs.getString("floorContent")+"\","
 					+"\"floorTime\":\""+floorTime+"\"";
@@ -43,7 +48,11 @@ public class ReadRefresh extends Refresh {
 			json+="},";
 		}
 		json=json.substring(0, json.length()-1);
-		json+="]}";
+		json+="]}";}
+		
+		else{
+			json="blank";
+		}
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

@@ -38,6 +38,25 @@ body{
     cursor:pointer;
 }
 
+#accept{
+	width:100px;
+    height:40px;
+    padding:10px;
+    border-radius: 5px;
+    font-weight:bold;
+    border:1px black solid;
+    background-color:white;
+    float:right;
+    text-align:center;
+    font-size:15px;
+}
+
+#accept:hover{
+    background-color:#6dd9fd;
+    border:1px #6dd9fd solid;
+    color:white;
+    cursor:pointer;
+}
 
 
 .time{
@@ -154,7 +173,7 @@ body{
 	padding:3px;
 	border:1px #c8ebf3 solid;
 	margin: 20px auto;
-	width:55%;
+	width:75%;
 	border-radius:5px;
 }
 

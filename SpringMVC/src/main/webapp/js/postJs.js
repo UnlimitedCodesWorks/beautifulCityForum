@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 
 
-function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,floorId){
+function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,floorId,responseNumber){
 	
 	var floor1=$('<div></div>');
 	var left=$('<div></div>');
@@ -60,11 +60,11 @@ function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,fl
 	content.html(floorContent);
 	
 	var response=$('<a></a>');
-	response.html("查看回复");
+	response.html("查看回复("+responseNumber+")");
 	time.append(response);
 	response.addClass("responseFloor");
 	response.attr("id","responseFloor"+floorNumber);
-	response.attr("onclick","Floor(\""+floorNumber+"\",\""+floorId+"\")");
+	response.attr("onclick","Floor(\""+floorNumber+"\",\""+floorId+"\",\""+responseNumber+"\")");
 	
 	var floorIn=$('<div></div>');
 	floorIn.addClass("floorIn");
@@ -93,7 +93,9 @@ function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,fl
 	delete1.html(deleteNode);
 	bandelete.append(delete1);
 	ban.addClass("ban");
+	ban.addClass("ban"+userId);
 	name.append(ban);
+	ban.hide();
 	
 	delete1.attr("href","javascript:void(0)");
 	delete1.attr("onclick","deleteFloor(\""+floorId+"\",this)");
@@ -105,15 +107,15 @@ function createFloor(userName,userId,floorContent,floorTime,floorNumber,title,fl
 }
 
 
-function Floor(i,floorId){ 
+function Floor(i,floorId,responseNumber){ 
 
   
 	if($('#floorIn'+i).is(':hidden')){//如果当前隐藏  
             $('#floorIn'+i).css('display','block');
-            $('#responseFloor'+i).html("收起回复") ;
+            $('#responseFloor'+i).html("收起回复("+responseNumber+")") ;
             }else{//否则  
             $('#floorIn'+i).css('display','none');
-            $('#responseFloor'+i).html("查看回复") ;
+            $('#responseFloor'+i).html("查看回复("+responseNumber+")") ;
             }
 	
 	$('#response1'+i).html("");
@@ -191,6 +193,7 @@ function ban(userId,val){
 			success: function(data){
 				if(data.success){
 					$("#modal-container-538356").modal('hide');
+					
 					}
 			},
 			error: function(jqXHR){     
@@ -262,7 +265,7 @@ function input(floorId,i){
 
 function deleteResponse(contentId,val){
 	$("#modal-container-972740").modal('show');
-	$("#infocontext2").html("确定要删除此层吗？");
+	$("#infocontext2").html("确定要删除此回复吗？");
 	
 	$("#confirm2").click(function(){
 		$.ajax({ 

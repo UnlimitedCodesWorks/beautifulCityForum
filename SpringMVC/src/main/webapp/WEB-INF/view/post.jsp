@@ -23,7 +23,7 @@
 	String driver="com.mysql.jdbc.Driver";
 		String url="jdbc:mysql://localhost:3306/countryforum?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		String user="root";
-		String password="15869105934";
+		String password="13750984796";
 		try {
 			Class.forName(driver);
 			con=DriverManager.getConnection(url,user,password);
@@ -135,7 +135,7 @@
                      <a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-cog"></i><%=personal%></a>
                 </li>
                 <li style="display:none">
-                	<a href="http://localhost:8080/SpringMVC/exit"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;注销</a>
+                	<a href="http://localhost:8080/SpringMVC/exit1?id=<%=themeId %>&pageIndex=${pageIndex}"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;注销</a>
 				</li>
             </ul>
             <ul class="breadcrumb" id="path">
@@ -148,6 +148,7 @@
             <ul class="pagination forumPagination">
                 
             </ul>
+            <span id="accept" ><i class="glyphicon glyphicon-thumbs-up"></i>编辑采纳</span>
         </div>
     </div>
     
@@ -155,12 +156,13 @@
     
     	<div class="floor1" id="firstFloor">
     		<div class="left">
-    			<div class="head"><img alt="140x140" src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" /></div>
+    			<div class="head"><img alt="140x140" src="http://localhost:8080/SpringMVC/personalIcon/<%=postUserId %>.jpg" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" /></div>
     			<div class="name"><a href="http://localhost:8080/SpringMVC/personal/<%=postUserId %>"><%=userName %></a><a  class="ban" onclick="ban(<%=postUserId %>,this)" >&nbsp[<i class="glyphicon glyphicon-ban-circle"></i>禁言]</a></div>
     			<div class="level">用户组：<%=title1 %></div>
     		</div>
     		<div class="right">
     			<span id="title"><%=themeName %></span>
+    			
     			<div class="content"><%=content %></div>
     			<div class="time">1楼&nbsp<%=themeTime.substring(0,16) %>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</div>
     		</div>
@@ -276,7 +278,7 @@
 								提示
 							</h4>
 						</div>
-						<div class="modal-body" >
+						<div class="modal-body" id="infocontext3" >
 							请先登录账号
 						</div>
 						<div class="modal-footer">
@@ -300,13 +302,22 @@
 	var pageIndex='${pageIndex}';
 	var pageNum='${pageNum}';
 	var themeId="<%=themeId%>";
+	
+if(json!='blank'){
 	var postJson=JSON.parse(json);
+	
 for(var i=0;i<postJson.post.length;i++){
-   		createFloor(postJson.post[i].userName,postJson.post[i].floorUserId,postJson.post[i].floorContent,postJson.post[i].floorTime,postJson.post[i].floorNumber,postJson.post[i].userTitle,postJson.post[i].floorId);
+			var reg=/"/g;
+            postJson.post[i].floorContent=postJson.post[i].floorContent.replace(reg,' ');
+   		createFloor(postJson.post[i].userName,postJson.post[i].floorUserId,postJson.post[i].floorContent,postJson.post[i].floorTime,postJson.post[i].floorNumber,postJson.post[i].userTitle,postJson.post[i].floorId,postJson.post[i].responseNumber);
    	}
+   	creatPageCol(pageNum,pageIndex,themeId);
+}
+else{
+	creatPageCol(1,1,themeId);
+}
 
-    creatPageCol(pageNum,pageIndex,themeId);
-    if(pageIndex!=1){
+     if(pageIndex!=1){
     	$("#firstFloor").hide();
     }
     
@@ -331,6 +342,9 @@ for(var i=0;i<postJson.post.length;i++){
 
     %>
     
+    var blockForBidden="<%=userBean.getBlockForbidden()%>";
+    
+    
     function response(){
 	var content=UM.getEditor('myEditor').getContent();
 	var userId="<%=userBean.getUserId()%>";
@@ -340,7 +354,11 @@ for(var i=0;i<postJson.post.length;i++){
 		floorNumber=1;
 	}else{ floorNumber=lastFloorId.substring(lastFloorId.indexOf(",")+1);}
 	var themeId="<%=themeId%>";
-	
+	if(blockForBidden=='1'){
+		$("#modal-container-118152").modal('show');
+		$("#infocontext3").html("您已被禁言，请等待禁言解除方可回复");
+	}
+	else{
 	$.ajax({
 	    type: "POST",
 		url: "http://localhost:8080/SpringMVC/responseAjax",
@@ -355,24 +373,32 @@ for(var i=0;i<postJson.post.length;i++){
 			var userName=data.userName;
 			var userId=data.userId;
 			var content=data.content;
+			var reg=/"/g;
+            content=content.replace(reg,' ');
 			var floorNumber=data.floorNumber;
 			var time=data.time;
 			var userTitle=data.userTitle;
 			var floorId=data.floorId;
-		createFloor(userName,userId,content,time,floorNumber,userTitle,floorId);
+		createFloor(userName,userId,content,time,floorNumber,userTitle,floorId,0);
+		window.location.reload();
 			
 		},
 		error: function(jqXHR){
 		   alert("发生错误：" + jqXHR.status);
 		},
-	});
+	});}
 }
+
 
 function responseFloor(floorId,i){
 	var b="<%=b%>";
 	var content=$("#text"+i).val();
 	var userId="<%=userBean.getUserId()%>";
 	if(b=="false"){
+	if(blockForBidden=='1'){
+		$("#modal-container-118152").modal('show');
+		$("#infocontext3").html("您已被禁言，请等待禁言解除方可回复");
+	}else{
 	$.ajax({
 	    type: "POST",
 		url: "http://localhost:8080/SpringMVC/responseInputAjax",
@@ -387,20 +413,23 @@ function responseFloor(floorId,i){
 			var userName=data.userName;
 			var userId=data.userId;
 			var content=data.content;
+			var reg=/"/g;
+            content=content.replace(reg,' ');
 			var time=data.time;
 			var floorId=data.floorId;
 			var contentId=data.contentId;
-			var floornumber1=data.floorNumber;
+			var floorNumber1=data.floorNumber;
 		createResponse(userName,userId,content,time,floorId,contentId,floorNumber1);
 			
 		},
 		error: function(jqXHR){
 		   alert("发生错误：" + jqXHR.status);
 		},
-	});}
+	});}}
 	
 	else{
 		$("#modal-container-118152").modal('show');
+		$("#infocontext3").html("请先登录账号");
 	}
 	
 }
@@ -420,7 +449,7 @@ function creatPageCol(pageNum,pageIndex,themeId){
 	$('.forumPagination').append(node);
 	$('.forumPagination > li:eq('+(parseInt(pageIndex)-1)+')').addClass("focus");
 	if(parseInt(pageIndex)!=1){
-		$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'&pageIndex='+(parseInt(pageIndex)-1)+'"">&larr; 上一页</a></li>');
+		$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'&pageIndex='+(parseInt(pageIndex)-1)+'">&larr; 上一页</a></li>');
 	}
 }
 
