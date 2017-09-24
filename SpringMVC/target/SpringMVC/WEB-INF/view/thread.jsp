@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>美丽乡村论坛</title>
+    <title>美丽乡村交流社区</title>
 <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/font-awesome-4.7.0/css/font-awesome.min.css">
 <link href="http://localhost:8080/SpringMVC/umeditor1.2.3-utf8-jsp/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
@@ -50,16 +50,16 @@
     <!-- 轮播（Carousel）导航 -->
 </div>
     <div id="bannerLeft">
-        <i class="fa fa-envira"></i>&nbsp;&nbsp;美丽乡村综合论坛 <a href="javascript:void(0)" class="chargeBtn_1" >管理版面</a>
+        <i class="fa fa-envira"></i>&nbsp;&nbsp;美丽乡村交流社区 <a href="javascript:void(0)" class="chargeBtn_1" >管理版面</a>
     </div>
     <nav class="navbar navbar-default" role="navigation" id="bannerRight">
         <div class="container-fluid">
             <div>
                 <ul class="nav navbar-nav" id="nav">
-                    <li><a href="#"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="http://localhost:8080/beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;登录</a></li>
                     <li><a href="http://localhost:8080/SpringMVC/sign"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;注册</a></li>
-                    <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%></a></li>
+                    <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%> <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
                     <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;<%=personal%></a></li>
                     <li style="display:none"><a href="http://localhost:8080/SpringMVC/exit"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;注销</a>
                 </ul>
@@ -70,7 +70,7 @@
         Beautiful Country Forum
     </div>
     <div id="bannerSearch">
-         <div class="input-group">
+         <div class="input-group" >
             <span class="input-group-addon" id="searchBtn"><i class="glyphicon glyphicon-search"></i></span>
             <input type="text" class="form-control searchInput" id="searchContent"  name="searchContent" placeholder="搜索你想要的内容">
             <input type="hidden" id="searchClass" name="searchClass" value="按主题搜索">
@@ -149,10 +149,11 @@
     <a href="http://localhost:8080/SpringMVC/forum/1?enlighten=false" class="btn btn-success fineBtn" ><i class="fa fa-arrow-left"></i> 返回 </a>
 </div>
 <div id="forumTop">
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 新闻推荐 <span class="badge" style="background-color:#A1A1A1;">70</span></a>
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 旅游推荐 <span class="badge" style="background-color:#A1A1A1;">120</span></a>
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 活动推荐 <span class="badge" style="background-color:#A1A1A1;">80</span></a>
-    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 热门帖子 <span class="badge" style="background-color:#A1A1A1;">110</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 新闻推荐 <span class="badge" style="background-color:#A1A1A1;">${newsNum}</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 旅游推荐 <span class="badge" style="background-color:#A1A1A1;">${activeNum}</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 活动推荐 <span class="badge" style="background-color:#A1A1A1;">${tourNum}</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 吐槽灌水 <span class="badge" style="background-color:#A1A1A1;">${nobNum}</span></a>
+    <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 热门帖子 <span class="badge" style="background-color:#A1A1A1;">${hotNum}</span></a>
 </div>
 <div class="container forumContent">
     <div id="forumContentContainer"></div>
@@ -209,6 +210,9 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)">活动推荐</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)">吐槽灌水</a>
                             </li>
                         </ul>
                     </div><!-- /btn-group -->
@@ -294,7 +298,7 @@
    		for(var j=0;j<themeArray.themes[i].label.length;j++){
    			labelArray.push(themeArray.themes[i].label[j]);
    		}
-   		creatCol(themeArray.themes[i].reply,labelArray,themeArray.themes[i].themeName,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].floorTime,themeArray.themes[i].floorName,themeArray.themes[i].enlighten,themeArray.themes[i].userId,themeArray.themes[i].floorId,themeArray.themes[i].themeId);
+   		creatCol(themeArray.themes[i].reply,labelArray,themeArray.themes[i].themeName,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].floorTime,themeArray.themes[i].floorName,themeArray.themes[i].enlighten,themeArray.themes[i].userId,themeArray.themes[i].floorId,themeArray.themes[i].themeId,themeArray.themes[i].accept,themeArray.themes[i].recommend);
    	}
    	creatPageCol(pageNum,pageIndex);
 	var b="<%=b%>";
@@ -318,6 +322,20 @@
 		$("#footer").hide();
 		$(".chargeBtn").hide();
 		$(".chargeBtn_1").hide();
+	}
+	var blockForBidden="<%=userBean.getBlockForbidden()%>";
+	if(blockForBidden=='1'){
+		UM.getEditor('myEditor').setDisabled('fullscreen');
+        $("#postQuickFooter input").val("你被禁言了");
+        $("#postQuickFooter input").attr("disabled","disabled");
+        $("#postQuickTheme .input-group .form-control").attr("disabled","disabled");
+	}
+	var unReadNum="<%=userBean.getUnreadNews()%>";
+	if(unReadNum=='0'){
+		$(".unread").hide();	
+	}else{
+		$(".unread").show();
+		$(".unread").text(unReadNum);
 	}
 </script>
 </html>

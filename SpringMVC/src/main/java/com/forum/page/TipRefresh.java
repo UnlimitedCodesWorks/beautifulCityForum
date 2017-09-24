@@ -22,6 +22,7 @@ public class TipRefresh extends Refresh {
 			}
 			json=json.substring(0, json.length()-1);
 			json+="]}";
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

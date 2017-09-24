@@ -4,6 +4,8 @@
 	boolean b=userBean==null||userBean.getUserId()==null||userBean.getUserId().length()==0;
 	String mail="通知";
 	String personal="个人中心";
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	if(!b){
 		mail=userBean.getUsername()+"的通知";
 		personal=userBean.getUserId()+"的个人中心";
@@ -15,18 +17,18 @@
     <meta charset="UTF-8" />
     <title>美丽乡村交流社区</title>
 <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/font-awesome-4.7.0/css/font-awesome.min.css">
-<link href="http://localhost:8080/SpringMVC/umeditor1.2.3-utf8-jsp/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/css/threadCss.css">
+<link rel="stylesheet" type="text/css" href="<%=basePath %>font-awesome-4.7.0/css/font-awesome.min.css">
+<link href="<%=basePath %>umeditor1.2.3-utf8-jsp/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<%=basePath %>css/threadCss.css">
 <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://localhost:8080/SpringMVC/umeditor1.2.3-utf8-jsp/third-party/template.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://localhost:8080/SpringMVC/umeditor1.2.3-utf8-jsp/umeditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="http://localhost:8080/SpringMVC/umeditor1.2.3-utf8-jsp/umeditor.min.js"></script>
-<script type="text/javascript" src="http://localhost:8080/SpringMVC/umeditor1.2.3-utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="<%=basePath %>umeditor1.2.3-utf8-jsp/third-party/template.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=basePath %>umeditor1.2.3-utf8-jsp/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=basePath %>umeditor1.2.3-utf8-jsp/umeditor.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>umeditor1.2.3-utf8-jsp/lang/zh-cn/zh-cn.js"></script>
 </head>
 <body>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="http://localhost:8080/SpringMVC/js/threadJs.js"></script>
+<script src="<%=basePath %>js/threadJs.js"></script>
 <div id="TopBanner">
     <div id="myCarousel" class="carousel slide ">
     <!-- 轮播（Carousel）指标 -->
@@ -38,13 +40,13 @@
     <!-- 轮播（Carousel）项目 -->
     <div class="carousel-inner">
         <div class="item active">
-            <img src="http://localhost:8080/SpringMVC/indexImage/banner.jpg" alt="First slide" class="bannerImg">
+            <img src="<%=basePath %>indexImage/banner.jpg" alt="First slide" class="bannerImg">
         </div>
         <div class="item">
-            <img src="http://localhost:8080/SpringMVC/indexImage/banner_1.jpg" alt="Second slide" class="bannerImg">
+            <img src="<%=basePath %>indexImage/banner_1.jpg" alt="Second slide" class="bannerImg">
         </div>
         <div class="item">
-            <img src="http://localhost:8080/SpringMVC/indexImage/banner_2.jpg" alt="Third slide" class="bannerImg">
+            <img src="<%=basePath %>indexImage/banner_2.jpg" alt="Third slide" class="bannerImg">
         </div>
     </div>
     <!-- 轮播（Carousel）导航 -->
@@ -56,12 +58,12 @@
         <div class="container-fluid">
             <div>
                 <ul class="nav navbar-nav" id="nav">
-                    <li><a href="http://localhost:8080/beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
-                    <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;登录</a></li>
-                    <li><a href="http://localhost:8080/SpringMVC/sign"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;注册</a></li>
-                    <li><a href="http://localhost:8080/SpringMVC/mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%> <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
-                    <li><a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;<%=personal%></a></li>
-                    <li style="display:none"><a href="http://localhost:8080/SpringMVC/exit"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;注销</a>
+                    <li><a href="<%=basePath %>beautifulCity/index"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="<%=basePath %>login"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;登录</a></li>
+                    <li><a href="<%=basePath %>sign"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;注册</a></li>
+                    <li><a href="<%=basePath %>mail"><i class="fa fa-commenting-o"></i>&nbsp;&nbsp;<%=mail%> <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
+                    <li><a href="<%=basePath %>login"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;<%=personal%></a></li>
+                    <li style="display:none"><a href="<%=basePath %>exit"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;注销</a>
                 </ul>
             </div>
         </div>
@@ -70,7 +72,7 @@
         Beautiful Country Forum
     </div>
     <div id="bannerSearch">
-         <div class="input-group">
+         <div class="input-group" >
             <span class="input-group-addon" id="searchBtn"><i class="glyphicon glyphicon-search"></i></span>
             <input type="text" class="form-control searchInput" id="searchContent"  name="searchContent" placeholder="搜索你想要的内容">
             <input type="hidden" id="searchClass" name="searchClass" value="按主题搜索">
@@ -145,8 +147,8 @@
 </div>
 <div id="mainBanner">
     综合讨论区 <i class="fa fa-group"></i>
-    <a href="http://localhost:8080/SpringMVC/forum/1?enlighten=true" class="btn btn-danger fineBtn" >精华区 <i class="fa fa-arrow-right"></i></a>
-    <a href="http://localhost:8080/SpringMVC/forum/1?enlighten=false" class="btn btn-success fineBtn" ><i class="fa fa-arrow-left"></i> 返回 </a>
+    <a href="<%=basePath %>forum/1?enlighten=true" class="btn btn-danger fineBtn" >精华区 <i class="fa fa-arrow-right"></i></a>
+    <a href="<%=basePath %>forum/1?enlighten=false" class="btn btn-success fineBtn" ><i class="fa fa-arrow-left"></i> 返回 </a>
 </div>
 <div id="forumTop">
     <a href="javascript:void(0)" class="btn btn-default forumTopBtn" onclick="labelSearch_1(this)" > <i class="fa fa-tag"></i> 新闻推荐 <span class="badge" style="background-color:#A1A1A1;">${newsNum}</span></a>
@@ -164,7 +166,7 @@
     <ul class="pagination forumPagination ">
     </ul>
     <ul id="post">
-        <li><a href="http://localhost:8080/SpringMVC/edit">发表新帖&nbsp;<i class="fa fa-print"></i></a></li>
+        <li><a href="<%=basePath %>edit">发表新帖&nbsp;<i class="fa fa-print"></i></a></li>
         <li><div class="btn-group">
         <button type="button" class="chargeBtn dropdown-toggle" data-toggle="dropdown" >批量操作&nbsp;<i class="fa fa-key"></i><span class="caret"></span></button>
         <ul class="dropdown-menu" role="menu" id="chargeList" >
@@ -190,7 +192,7 @@
         快速发帖
     </div>
     <div id="postQuickBody">
-        <form action="http://localhost:8080/SpringMVC/pageContent" method="post" accept-charset="utf-8">
+        <form action="<%=basePath %>pageContent" method="post" accept-charset="utf-8">
             <div id="postQuickTheme">
                 <div class="input-group">
                     <input type="text" class="form-control" name="theme" id="theme" placeholder="你能输入80个字符">
@@ -221,7 +223,7 @@
             <script type="text/plain" id="myEditor" ></script>
             <div id="postQuickFooter">
                 <input type="submit" class="btn btn-primary" value="发表新帖(Ctrl+Enter)">
-                <a href="http://localhost:8080/SpringMVC/edit">高级模式</a>
+                <a href="<%=basePath %>edit">高级模式</a>
             </div>
         </form>
     </div>
@@ -275,6 +277,7 @@
    	var tourArray=JSON.parse(json_2);
    	var themeArray=JSON.parse(json_3);
    	var userIdentity="<%=userBean.getUserIdentity()%>";
+   	var basePath="<%=basePath %>";
     $('#pageIndex').val(pageIndex);
     if(pageIndex==parseInt(pageNum)){
            $('#nextPage').hide();
@@ -311,7 +314,7 @@
 		$("#nav li:eq(5)").show();
 		$("#post").show();
 		$("#footer").show();
-		$("#nav li:eq(4) a").attr("href","http://localhost:8080/SpringMVC/personal/"+userId);
+		$("#nav li:eq(4) a").attr("href","<%=basePath %>personal/"+userId);
 		$("#bannerRight").width("50em");
 		if(userIdentity=='0'){
 			$(".chargeBtn").hide();

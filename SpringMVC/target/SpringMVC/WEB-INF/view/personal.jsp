@@ -22,16 +22,16 @@
     <div id="TopBanner">
         <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村论坛</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href="#" class="personalHref" ><i class="glyphicon glyphicon-user"></i> 个人信息</a></li>
         </ul>
         <ul id="BannerRight">
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
-            <li><a href="#">首页</a></li>
+            <li><a href="http://localhost:8080/beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
-            <li><a href="http://localhost:8080/SpringMVC/mail">消息</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
-            <li><a href='#' class="personalHref"><img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像"></a></li>
+            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" ></a></li>
         </ul>
         <div id="bannerBottom">
         Beautiful Country Forum
@@ -103,10 +103,10 @@
                     </div>
                     <div class="imgContent" style="position: relative;">
                         <div class="imgShow" >
-                            <img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" style="width:198px;height:198px;display:inline-block;">
+                            <img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" style="width:198px;height:198px;display:inline-block;">
                         </div>
                         <div class="imgContainer" style="display:none">
-                            <img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg"  alt="头像">
+                            <img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" >
                         </div>
                         <label  class="importDiv" style="display:none" for="inputImage" title="Upload image file">
                         <input  id="inputImage" name="file" type="file" accept="image/*">
@@ -119,12 +119,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <div class="personalBodyTop" style="background-color:#BA9F08; margin-top: 50px;">
-                        ${userId}发布的帖子 <i class="fa fa-edit"></i>
+                <div class="col-lg-6 col-md-6 tip">
+                    <div class="personalBodyTop" style="background-color:rgb(198,26,22);margin-top: 50px;">
+                        ${userName}的提醒消息 <i class="fa fa-bell"></i>
+                        <button type="button" class="btn btn-default tipBtn" id="tipDeleteArray" >批量删除</button>
                     </div>
-                     <div class="personalContent">
-                      <a href="#" class="personalLink" >[搜索${userName}发布的主题]</a> <a href="#" class="personalLink" >[搜索${userName}发布的回复]</a>
+                    <div class="personalContent" style="position: relative;">
+                    <div class="tipContainer" style="width:100%;">
+                        	<div class="emailIndex">暂无提醒消息</div>
+                     </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 email">
@@ -151,6 +154,16 @@
                                     <button type="button" class="btn btn-primary" id="emailBtn" >发送</button>
                                 </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="personalBodyTop" style="background-color:#BA9F08; margin-top: 50px;">
+                        ${userId}发布的帖子 <i class="fa fa-edit"></i>
+                    </div>
+                     <div class="personalContent">
+                      <a href="#" class="personalLink" >[搜索${userName}发布的主题]</a> <a href="#" class="personalLink" >[搜索${userName}发布的回复]</a>
                     </div>
                 </div>
             </div>
@@ -249,9 +262,13 @@
 	var userPassword="<%=userBean.getPassword()%>";
 	var verifyCode = new GVerify("Verify");
 	var json='${json}';
+	var tipJson='${tipJson}';
 	var pageNum='${pageNum}';
+	var tipNum='${tipNum}';
 	pageNum=parseInt(pageNum);
+	tipNum=parseInt(tipNum);
 	var pageIndex=1;
+	var tipIndex=1;
 	$("#userId").val(userId);
 	$("#personalSignature").val(userRemark);
 	var url_1="http://localhost:8080/SpringMVC/search?searchContent="+userId+"&searchClass=按用户主题搜索";
@@ -261,6 +278,8 @@
 	$(".personalLink:eq(0)").attr("href",url_1);
 	$(".personalLink:eq(1)").attr("href",url_2);
 	var b="<%=b%>";
+	$(".imgShow img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId+".jpg");
+	$(".imgContainer img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId+".jpg");
 	if(b=="true"){
 		$("#BannerRight").hide();
 		$(".change:eq(0)").hide();
@@ -268,31 +287,44 @@
 		$("#exit").hide();
 		$("#editPassword").hide();
 		$(".email").hide();
+		$(".tip").hide();
+		$('#personalBody').css("height","560px");
 	}else{
 		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-		var ImgObj=new Image();
-		ImgObj.src="http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg";
-		 if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)){
-		 	$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 	$(".imgShow img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 	$(".imgContainer img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 }
+		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
 		if(userId_1!=userId){
 			$(".change:eq(0)").hide();
 			$("#changeIcon").hide();
 			$("#exit").hide();
 			$("#editPassword").hide();
 			$(".email").hide();
+			$(".tip").hide();
+			$('#personalBody').css("height","560px");
 		}
 
 	}
-	if(json!=''){
+	if(json!='{"emails":]}'&&json!=''){
 		var mailArray=JSON.parse(json);
 		$(".emailContainer:eq(0)").html("");
 		for(var i=0;i<mailArray.emails.length;i++){
 			creatCol(mailArray.emails[i].emailId,mailArray.emails[i].senderId,mailArray.emails[i].senderName,mailArray.emails[i].content,mailArray.emails[i].time);
 		}
 		creatPageCol(pageNum,pageIndex);
+	}
+	if(tipJson!='{"tips":]}'&&tipJson!=''){
+		var tipArray=JSON.parse(tipJson);
+		$(".tipContainer:eq(0)").html("");
+		for(var i=0;i<tipArray.tips.length;i++){
+			creatTipCol(tipArray.tips[i].themeId,tipArray.tips[i].themeName,tipArray.tips[i].time,tipArray.tips[i].type,tipArray.tips[i].tipId);
+		}
+		creatTipPageCol(tipNum,tipIndex);
+	}
+	var unReadNum="<%=userBean.getUnreadNews()%>";
+	if(unReadNum=='0'){
+		$(".unread").hide();
+	}else{
+		$(".unread").show();
+		$(".unread").text(unReadNum);
 	}
 </script>
 </html>

@@ -11,14 +11,30 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
         <springframework.version>4.0.6.RELEASE</springframework.version>  
     </properties>  
-      
+    
+ <profiles>
+    <profile>
+        <id>jdk-1.8</id>
+        <!-- 另外一种激活方式 -->
+        <activation>
+            <activeByDefault>true</activeByDefault>
+            <jdk>1.8</jdk>
+        </activation>
+        <properties>
+            <maven.compiler.source>1.8</maven.compiler.source>
+            <maven.compiler.target>1.8</maven.compiler.target>
+<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+        </properties>
+    </profile>
+</profiles>
+ 
     <dependencies>  
   
         <!-- 导入java ee jar 包 -->  
         <dependency>  
             <groupId>javax</groupId>  
             <artifactId>javaee-api</artifactId>  
-            <version>7.0</version>  
+            <version>8.0</version>  
         </dependency>  
         <dependency>  
             <groupId>junit</groupId>  

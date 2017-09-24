@@ -2,6 +2,9 @@
 <jsp:useBean id="userBean" class="com.forum.login.LoginBean" scope="session"/>
 <%
 	boolean b=userBean==null||userBean.getUserId()==null||userBean.getUserId().length()==0;
+	if(userBean.getBlockForbidden()==1){
+		response.sendRedirect("http://localhost:8080/SpringMVC/forum/1");
+	}
  %>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,16 +25,16 @@
     <div id="TopBanner">
         <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村论坛</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href="#"><i class="glyphicon glyphicon-edit"></i> 编辑帖子</a></li>
         </ul>
         <ul id="BannerRight">
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
-            <li><a href="#">首页</a></li>
+            <li><a href="http://localhost:8080/beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
-            <li><a href="http://localhost:8080/SpringMVC/mail">消息</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
-            <li><a href='#' class="personalHref"><img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像"></a></li>
+            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" alt="用户头像"></a></li>
         </ul>
         <div id="bannerBottom">
         Beautiful Country Forum
@@ -84,6 +87,9 @@
                             <li>
                                 <a href="javascript:void(0)">活动推荐</a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)">吐槽灌水</a>
+                            </li>
                         </ul>
                     </div><!-- /btn-group -->
                 </div><!-- /input-group -->
@@ -101,11 +107,14 @@
    	var userId_1="<%=userBean.getUserId()%>";
    	if(b!="true"){
    		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-   		var ImgObj=new Image();
-		ImgObj.src="http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg";
-		 if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)){
-		 	$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 }
-   	}	
+		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
+   	}
+   	var unReadNum="<%=userBean.getUnreadNews()%>";
+	if(unReadNum=='0'){
+		$(".unread").hide();	
+	}else{
+		$(".unread").show();
+		$(".unread").text(unReadNum);
+	}
 </script>
 </html>

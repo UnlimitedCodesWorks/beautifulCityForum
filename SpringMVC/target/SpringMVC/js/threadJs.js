@@ -2,7 +2,7 @@
 * @Author: Marte
 * @Date:   2017-07-24 15:27:38
 * @Last Modified by:   Marte
-* @Last Modified time: 2017-08-27 22:25:47
+* @Last Modified time: 2017-09-15 15:11:42
 */
 var time;
 $(document).ready(function(){
@@ -20,6 +20,7 @@ $(document).ready(function(){
         width:'5em'
       });
     $('.themeDiv_1').css('display','none');
+    $('.searchInput').css('width','2.2em');
     },2000);
 });
   $('#myCarousel').carousel({
@@ -69,7 +70,7 @@ $(document).ready(function(){
                		for(var j=0;j<data.themes[i].label.length;j++){
                			labelArray.push(data.themes[i].label[j]);
                		}
-               		creatCol(data.themes[i].reply,labelArray,data.themes[i].themeName,data.themes[i].userName,data.themes[i].themeTime,data.themes[i].floorTime,data.themes[i].floorName,data.themes[i].enlighten,data.themes[i].userId,data.themes[i].floorId,data.themes[i].themeId);
+               		creatCol(data.themes[i].reply,labelArray,data.themes[i].themeName,data.themes[i].userName,data.themes[i].themeTime,data.themes[i].floorTime,data.themes[i].floorName,data.themes[i].enlighten,data.themes[i].userId,data.themes[i].floorId,data.themes[i].themeId,data.themes[i].accept,data.themes[i].recommend);
                	}
             	pageIndex++;
            		$('#pageIndex').val(pageIndex);
@@ -90,6 +91,14 @@ $(document).ready(function(){
            			$("#forumContentContainer").css('overflow','visible');
            		},1000);
            		$("[data-toggle='tooltip']").tooltip({html:true});
+           		$(".chargeDiv i").click(function(e){
+           		   var value=$(this).attr("data-original-title");
+           		   var parentNode=$(this).parent();
+           		   $("#mymodal-body").html('您确认要<span style="color:red;font-weight:bold;" >'+value+'</span>该主题吗？');
+           		   $("#modalClass").val(value);
+           		   $("#modalId").val(parentNode.attr("title"));
+           		   $('#myModal').modal('show');
+           	   });
             },
             error: function(jqXHR){
                alert("发生错误：" + jqXHR.status);
@@ -103,7 +112,7 @@ $(document).ready(function(){
 	   var reg=/"/g;
 	   var themeClass=$('#themeClass').val();
 	   var theme=$("#theme").val();
-	   content=content.replace(reg,'&quot;');
+	   content=content.replace(reg,' ');
 	   $("#postContent").val(content);
 	   if(content==""){
 		   e.preventDefault();
@@ -130,27 +139,27 @@ $(document).ready(function(){
 	   $("#modalClass_1").val(value);
 	   $('#myModal_1').modal('show');
    });
-   $('#myModal').on('show.bs.modal', function (e) {  
-       // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零  
-       $(this).css('display', 'block');  
-       var modalHeight=$(window).height() / 2 - $('#myModal .modal-dialog').height() / 2;  
-       $(this).find('.modal-dialog').css({  
-           'margin-top': modalHeight  
-       });  
+   $('#myModal').on('show.bs.modal', function (e) {
+       // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+       $(this).css('display', 'block');
+       var modalHeight=$(window).height() / 2 - $('#myModal .modal-dialog').height() / 2;
+       $(this).find('.modal-dialog').css({
+           'margin-top': modalHeight
+       });
    });
-   $('#myModal_1').on('show.bs.modal', function (e) {  
-       // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零  
-       $(this).css('display', 'block');  
-       var modalHeight=$(window).height() / 2 - $('#myModal_1 .modal-dialog').height() / 2;  
-       $(this).find('.modal-dialog').css({  
-           'margin-top': modalHeight  
-       });  
+   $('#myModal_1').on('show.bs.modal', function (e) {
+       // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+       $(this).css('display', 'block');
+       var modalHeight=$(window).height() / 2 - $('#myModal_1 .modal-dialog').height() / 2;
+       $(this).find('.modal-dialog').css({
+           'margin-top': modalHeight
+       });
    });
    $('#modalSubmit').click(function(e){
 	   var modalClass=$("#modalClass").val();
 	   var modalId=$("#modalId").val();
-	   $.ajax({ 
-		    type: "POST", 	
+	   $.ajax({
+		    type: "POST",
 			url: "http://localhost:8080/SpringMVC/editThemeAjax",
 			data: {
 				editClass:modalClass,
@@ -158,29 +167,29 @@ $(document).ready(function(){
 			},
 			dataType: "json",
 			success: function(data){
-				if (data.success) { 
+				if (data.success) {
 					window.location.reload();
 				}else{
 					alert("修改失败!");
-				} 
+				}
 			},
-			error: function(jqXHR){     
-			   alert("发生错误：" + jqXHR.status);  
-			},     
+			error: function(jqXHR){
+			   alert("发生错误：" + jqXHR.status);
+			},
 		});
    });
-   
+
    $('#modalSubmit_1').click(function(e){
 	   var modalClass=$("#modalClass_1").val();
 	   var nodes=$(".chargeBox:checked");
-	   
+
 	   var themesId=new Array();
 	   nodes.each(function(){
 		   var themeId=$(this).prev().attr("title");
 		   themesId.push(themeId);
 	   });
-	   $.ajax({ 
-		    type: "POST", 	
+	   $.ajax({
+		    type: "POST",
 			url: "http://localhost:8080/SpringMVC/editThemesAjax",
 			data: {
 				editClass:modalClass,
@@ -189,18 +198,18 @@ $(document).ready(function(){
 			dataType: "json",
 			traditional: true,
 			success: function(data){
-				if (data.success) { 
+				if (data.success) {
 					window.location.reload();
 				}else{
 					alert("修改失败!");
-				} 
+				}
 			},
-			error: function(jqXHR){     
-			   alert("发生错误：" + jqXHR.status);  
-			},     
-		}); 
+			error: function(jqXHR){
+			   alert("发生错误：" + jqXHR.status);
+			},
+		});
    });
-   
+
 });
 function creatTopCol(labelName,themeName,themeId){
   var node='<tr><td class="topTableTd" style="border-right: 0px;border-left: 0px;" ><a href="javascript:void(0)" class="label_1" onclick="labelSearch(this)" >['+labelName+']</a><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'"class="label_2">'+themeName+'</a>';
@@ -218,7 +227,7 @@ function creatTopCol(labelName,themeName,themeId){
 	  $('.topTable:eq(2)').append(node);
   }
 }
-function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,enlighten,userId,floorId,themeId){
+function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,enlighten,userId,floorId,themeId,accept,recommend){
 	var node='<div class="row forumContentRow"><div class="col-md-1 col-lg-1 forumContentCol"><div class="forumContentCol_1 btn btn-primary">'
 		+reply+'</div></div><div class="col-md-7 col-lg-7 forumContentCol"><div class="forumContentCol_2">';
 	 for(var i=0;i<label.length;i++){
@@ -227,6 +236,12 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'"class="label_2">'+themeName+'</a>';
 	if(parseInt(enlighten)==1){
 		node+='<i class="enlighten">精</i>';
+	}
+	if(parseInt(recommend)>=100){
+		node+='<i class="recommend">荐</i>';
+	}
+	if(accept=='1'){
+		node+='<i class="accept">编辑采用</i><i class="fa fa-database" style="margin-left:10px;"></i><i class="point">+50</i>';
 	}
 	if(userIdentity=='1'){
 		node+='<div class="chargeDiv" title="'+themeId+'">';
@@ -265,7 +280,7 @@ function turnSearch(){
     url=encodeURI(encodeURI(url));
     window.location.href=url;
 }
-function labelSearch_1(e){	
+function labelSearch_1(e){
 	var str=$(e).text().substring(2,6);
 	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+str+"&searchClass=按标签搜索";
 	url=encodeURI(encodeURI(url));

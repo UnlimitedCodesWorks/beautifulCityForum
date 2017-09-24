@@ -181,6 +181,37 @@ $(function(){
 
   });
   
+  $("#tipDeleteArray").click(function(e){
+	  var value=e.target.textContent;
+	  if(value=='批量删除'){
+		  $(".tipDelete").show();
+		  $(this).html('确认');
+	  }else if(value=='确认'){
+		  var node=$(".tipDelete:checked");
+		  node=node.parent().prev();
+		  var data=new Array();
+		  for(var i=0;i<node.length;i++){
+			  data.push(node[i].getAttribute("data"));
+		  }
+		 
+		  $.ajax({ 
+			    type: "POST", 	
+				url: "http://localhost:8080/SpringMVC/tipDeleteAjax",
+				data: {
+					tipsId:data.toString()
+				},
+				dataType: "json",
+				success: function(data){
+					if (data.success) { 
+						$('#myModal').modal('show');
+					} 
+				},
+				error: function(jqXHR){     
+				   alert("发生错误：" + jqXHR.status);  
+				},     
+			});
+	  }
+  });
   $("#emailTarget").blur(function(){
 	  $.ajax({ 
 		    type: "POST", 	
@@ -359,10 +390,10 @@ function password(){
 
 function creatCol(emailId,senderId,senderName,content,time){
 	var node='<div class="row emailRow" style="height:50px"><div class="col-lg-1 col-md-1 emailCol">';
-     node+='<img src="http://localhost:8080/SpringMVC/personalIcon/'+senderId+'.jpg" style="width:50px;height:50px" >';
-	 node+='</div><div class="col-lg-8 col-md-8 emailCol">';
+     node+='<img src="http://localhost:8080/SpringMVC/personalIcon/'+senderId+'.jpg" onerror="javascript:this.src=\'http://localhost:8080/SpringMVC/indexImage/indexImg.jpg\'" style="width:50px;height:50px" >';
+	 node+='</div><div class="col-lg-7 col-md-7 emailCol">';
 	 node+='<a href="http://localhost:8080/SpringMVC/personal/'+senderId+'">'+senderName+':</a>'+content;
-	 node+='</div><div class="col-lg-2 col-md-2 emailCol">'+time+'</div> <div class="col-lg-1 col-md-1 emailCol" emailData="'+emailId+'" ><a href="javascript:void(0)" onclick="mailDelete(this)" >删除</a>';
+	 node+='</div><div class="col-lg-2 col-md-2 emailCol">'+time+'</div> <div class="col-lg-2 col-md-2 emailCol" emailData="'+emailId+'" ><a href="javascript:void(0)" onclick="mailDelete(this)" >删除</a>';
 	 node+='</div></div>';
 	$(".emailContainer:eq(0)").append(node);
 }
@@ -454,4 +485,97 @@ function mailDelete(e){
 	$("#mymodal-body").html('您确定要<span style="color:red;font-weight:bold">删除</span>该消息吗？');
 	$("#modalId").val(emailId);
 	$("#myModal_2").modal('show');
+}
+function creatTipCol(themeId,themeName,time,type,tipId){
+	var node='<div class="row"><div class="col-md-11 col-lg-11 tipRow" data="'+tipId+'">';
+	node+=' <i class="fa fa-bookmark"></i> 您的主题 <a href="http://localhost:8080/SpringMVC/read?id='+themeId+'">'
+	+themeName+'</a>于<span style="color:#929191;">'+time+'</span> 被';
+	node+='<span style="color:rgb(217,83,79); font-weight: bold;"> '+type+' </span></div><div class="col-md-1 col-lg-1 tipRow"><input type="checkbox" class="tipDelete"></div></div>';
+	$(".tipContainer:eq(0)").append(node);
+}
+function creatTipPageCol(pageNum,pageIndex){
+	var node='<div class="tipFooter">';
+	for(var i=0;i<pageNum;i++){
+		node+='<a href="javascript:void(0)" onclick="tip(this)">'+(i+1)+'</a>';
+	}
+	if(pageIndex==1&&pageIndex!=pageNum){
+		node+='<a href="javascript:void(0)" onclick="tipAfter()" >下一页</a>';
+	}
+	node+='</div>';
+	$(".tipContainer:eq(0)").append(node);
+	$(".tipFooter a:eq("+(pageIndex-1)+")").addClass("focus");
+	if(pageIndex!=1){
+		$(".tipFooter").prepend('<a href="javascript:void(0)" onclick="tipBefore()" >上一页</a>');
+	}
+	var value=$("#tipDeleteArray").html();
+	if(value=='确认'){
+		$(".tipDelete").show();
+	}
+}
+
+function tip(e){
+	var page=$(e).text();
+	$.ajax({ 
+	    type: "POST", 	
+		url: "http://localhost:8080/SpringMVC/tipPageAjax",
+		data: {
+			pageIndex:page
+		},
+		dataType: "json",
+		success: function(data){
+			tipIndex=parseInt(page);
+			$(".tipContainer:eq(0)").html("");
+			for(var i=0;i<data.tips.length;i++){
+				creatTipCol(data.tips[i].themeId,data.tips[i].themeName,data.tips[i].time,data.tips[i].type,data.tips[i].tipId);
+			}
+			creatTipPageCol(tipNum,tipIndex);
+		},
+		error: function(jqXHR){     
+		   alert("发生错误：" + jqXHR.status);  
+		},     
+	});
+}
+function tipBefore(){
+	var page=tipIndex-1;
+	$.ajax({ 
+	    type: "POST", 	
+		url: "http://localhost:8080/SpringMVC/tipPageAjax",
+		data: {
+			pageIndex:page
+		},
+		dataType: "json",
+		success: function(data){
+			tipIndex--;
+			$(".tipContainer:eq(0)").html("");
+			for(var i=0;i<data.tips.length;i++){
+				creatTipCol(data.tips[i].themeId,data.tips[i].themeName,data.tips[i].time,data.tips[i].type,data.tips[i].tipId);
+			}
+			creatTipPageCol(tipNum,tipIndex);
+		},
+		error: function(jqXHR){     
+		   alert("发生错误：" + jqXHR.status);  
+		},     
+	});
+}
+function tipAfter(){
+	var page=tipIndex+1;
+	$.ajax({ 
+	    type: "POST", 	
+		url: "http://localhost:8080/SpringMVC/tipPageAjax",
+		data: {
+			pageIndex:page
+		},
+		dataType: "json",
+		success: function(data){
+			tipIndex++;
+			$(".tipContainer:eq(0)").html("");
+			for(var i=0;i<data.tips.length;i++){
+				creatTipCol(data.tips[i].themeId,data.tips[i].themeName,data.tips[i].time,data.tips[i].type,data.tips[i].tipId);
+			}
+			creatTipPageCol(tipNum,tipIndex);
+		},
+		error: function(jqXHR){     
+		   alert("发生错误：" + jqXHR.status);  
+		},     
+	});
 }

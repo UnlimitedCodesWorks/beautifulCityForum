@@ -54,7 +54,7 @@ $(document).ready(function(){
 	   var reg=/"/g;
 	   var themeClass=$('#themeClass').val();
 	   var theme=$("#theme").val();
-	   content=content.replace(reg,'&quot;');
+	   content=content.replace(reg,' ');
 	   $("#postContent").val(content);
 	   if(content==""){
 		   e.preventDefault();

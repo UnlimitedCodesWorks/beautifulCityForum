@@ -113,7 +113,7 @@ body{
 }
 #personalBody{
     width:100%;
-    height:1080px;
+    display:table;
     background-color:#F2F2F2;
     padding:40px 50px;
 }
@@ -139,6 +139,7 @@ body{
     width:100%;
     box-shadow: 5px 5px 5px #888888;
     box-sizing:border-box;
+    display:table;
     padding:20px 50px;
  }
  .personalContent a{
@@ -382,7 +383,7 @@ body{
 }
 .emailCol{
     line-height:50px;
-    font-size:0.95em;
+    font-size:90%;
 }
 .emailRow{
 	margin-top:20px;
@@ -397,7 +398,7 @@ body{
 }
 .emailCol:nth-child(3){
     color:#929191;
-    font-size:14px;
+    font-size:90%;
 }
 .emailFooter , .tipFooter{
     width:100%;
@@ -454,9 +455,22 @@ body{
 }
 .tipRow{
     height:33px;
-    font-size:15px;
+    font-size:14px;
     line-height:33px;
 }
 .tipDelete{
 	display:none;
+}
+@media screen and (max-width: 1200px){
+	.col-md-6{
+		width:90%;
+		margin-bottom:50px;
+	}
+	#searchContent{
+		padding-left:0px;
+		padding-right:0px;
+	}
+	#bannerBottom{
+		font-size:22px;
+	}
 }

@@ -28,6 +28,8 @@ public class ReadRefresh extends Refresh {
 			String userTitle=point.handle(userPoints);
 			String floorTime=rs.getString("floorTime");
 			floorTime=FloorTime.handle(floorTime);
+			LevelHandle level=new LevelHandle();
+			int userLevel=level.handle(userPoints);
 			
 			sql=con.prepareStatement("select contentId from userresponse where floorId=?");
 			sql.setString(1,rs.getString("floorId"));
@@ -41,6 +43,7 @@ public class ReadRefresh extends Refresh {
 					+"\"floorNumber\":\""+floorNumber+"\","
 					+"\"responseNumber\":\""+responseNumber+"\","
 					+"\"userTitle\":\""+userTitle+"\","
+					+"\"userLevel\":\""+userLevel+"\","
 					+"\"floorContent\":\""+rs.getString("floorContent")+"\","
 					+"\"floorTime\":\""+floorTime+"\"";
 			
@@ -53,6 +56,7 @@ public class ReadRefresh extends Refresh {
 		else{
 			json="blank";
 		}
+		con.close();
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

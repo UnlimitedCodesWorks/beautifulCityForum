@@ -72,6 +72,7 @@ public class SearchRefresh extends Refresh{
 			}
 			json=json.substring(0, json.length()-1);
 			json+="]}";
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,6 +127,7 @@ public class SearchRefresh extends Refresh{
 				}
 				json=json.substring(0, json.length()-1);
 				json+="]}";
+				con.close();
 			}catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();

@@ -146,7 +146,7 @@
 							登录成功
 						</div>
 						<div class="modal-footer">
-							<a href="http://localhost:8080/SpringMVC/forum/1"> <button type="button" class="btn btn-success">转到首页</button> </a>
+							<a href="http://localhost:8080/SpringMVC/forum/1"> <button type="button" class="btn btn-success">回到论坛</button> </a>
 						</div>
 					</div>
 					

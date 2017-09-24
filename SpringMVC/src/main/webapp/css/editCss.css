@@ -139,3 +139,13 @@ body{
 #themeSelect{
 	z-index:1001;
 }
+@media screen and (max-width: 1200px){
+	
+	#searchContent{
+		padding-left:0px;
+		padding-right:0px;
+	}
+	#bannerBottom{
+		font-size:22px;
+	}
+}

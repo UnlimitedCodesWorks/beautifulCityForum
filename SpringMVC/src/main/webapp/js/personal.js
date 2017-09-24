@@ -99,7 +99,7 @@ $(function(){
       carvans=carvans.getElementsByTagName("canvas")[0];
       var data=carvans.toDataURL();
        $.ajax({
-    	  url: "http://localhost:8080/SpringMVC/iconAjax",
+    	  url: basePath+"iconAjax",
     	  type: "POST",
     	  data: {"image":data.toString()},
     	  dataType:'json',
@@ -196,7 +196,7 @@ $(function(){
 		 
 		  $.ajax({ 
 			    type: "POST", 	
-				url: "http://localhost:8080/SpringMVC/tipDeleteAjax",
+				url: basePath+"tipDeleteAjax",
 				data: {
 					tipsId:data.toString()
 				},
@@ -215,7 +215,7 @@ $(function(){
   $("#emailTarget").blur(function(){
 	  $.ajax({ 
 		    type: "POST", 	
-			url: "http://localhost:8080/SpringMVC/emailVaAjax",
+			url: basePath+"emailVaAjax",
 			data: {
 				user:$("#emailTarget").val()
 			},
@@ -249,7 +249,7 @@ $(function(){
 	  if(value!='0'&&$("#emailContent").val().length>0){
 		   $.ajax({ 
 			    type: "POST", 	
-				url: "http://localhost:8080/SpringMVC/emailAjax",
+				url: basePath+"emailAjax",
 				data: {
 					senderId:userId_1,
 					recipient:$("#emailTarget").val(),
@@ -298,7 +298,7 @@ $(function(){
   $("#modalSubmit").click(function(){
 	  $.ajax({ 
 		    type: "POST", 	
-			url: "http://localhost:8080/SpringMVC/emailDeleteAjax",
+			url: basePath+"emailDeleteAjax",
 			data: {
 				emailId:$("#modalId").val()
 			},
@@ -332,14 +332,14 @@ function changePassword(){
   }
 
 function turnSearch(){
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
+	var url=basePath+"search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
     url=encodeURI(encodeURI(url));
     window.location.href=url;
 }
 function changePersonal(){
 	$.ajax({
 	    type: "POST",
-		url: "http://localhost:8080/SpringMVC/personalAjax",
+		url: basePath+"personalAjax",
 		data: {
 			userName: $("#userName").val(),
 			userRemark:$("#personalSignature_1").val(),
@@ -368,7 +368,7 @@ function password(){
 	if(password==userPassword&&partern.exec(value)&&value_2==value_1&&res){
 		$.ajax({
 		    type: "POST",
-			url: "http://localhost:8080/SpringMVC/passwordAjax",
+			url: basePath+"passwordAjax",
 			data: {
 				userId:userId,
 				newPassword:value_2
@@ -390,10 +390,10 @@ function password(){
 
 function creatCol(emailId,senderId,senderName,content,time){
 	var node='<div class="row emailRow" style="height:50px"><div class="col-lg-1 col-md-1 emailCol">';
-     node+='<img src="http://localhost:8080/SpringMVC/personalIcon/'+senderId+'.jpg" onerror="javascript:this.src=\'http://localhost:8080/SpringMVC/indexImage/indexImg.jpg\'" style="width:50px;height:50px" >';
-	 node+='</div><div class="col-lg-8 col-md-8 emailCol">';
-	 node+='<a href="http://localhost:8080/SpringMVC/personal/'+senderId+'">'+senderName+':</a>'+content;
-	 node+='</div><div class="col-lg-2 col-md-2 emailCol">'+time+'</div> <div class="col-lg-1 col-md-1 emailCol" emailData="'+emailId+'" ><a href="javascript:void(0)" onclick="mailDelete(this)" >删除</a>';
+     node+='<img src="'+basePath+'personalIcon/'+senderId+'.jpg" onerror="javascript:this.src=\''+basePath+'indexImage/indexImg.jpg\'" style="width:50px;height:50px" >';
+	 node+='</div><div class="col-lg-7 col-md-7 emailCol">';
+	 node+='<a href="'+basePath+'personal/'+senderId+'">'+senderName+':</a>'+content;
+	 node+='</div><div class="col-lg-2 col-md-2 emailCol">'+time+'</div> <div class="col-lg-2 col-md-2 emailCol" emailData="'+emailId+'" ><a href="javascript:void(0)" onclick="mailDelete(this)" >删除</a>';
 	 node+='</div></div>';
 	$(".emailContainer:eq(0)").append(node);
 }
@@ -417,7 +417,7 @@ function email(e){
 	var page=$(e).text();
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/emailPageAjax",
+		url: basePath+"emailPageAjax",
 		data: {
 			pageIndex:page
 		},
@@ -439,7 +439,7 @@ function emailBefore(){
 	var page=pageIndex-1;
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/emailPageAjax",
+		url: basePath+"emailPageAjax",
 		data: {
 			pageIndex:page
 		},
@@ -461,7 +461,7 @@ function emailAfter(){
 	var page=pageIndex+1;
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/emailPageAjax",
+		url: basePath+"emailPageAjax",
 		data: {
 			pageIndex:page
 		},
@@ -487,10 +487,10 @@ function mailDelete(e){
 	$("#myModal_2").modal('show');
 }
 function creatTipCol(themeId,themeName,time,type,tipId){
-	var node='<div class="row"><div class="col-md-10 col-lg-10 tipRow" data="'+tipId+'">';
-	node+=' <i class="fa fa-bookmark"></i> 您的主题 <a href="http://localhost:8080/SpringMVC/read?id='+themeId+'">'
+	var node='<div class="row"><div class="col-md-11 col-lg-11 tipRow" data="'+tipId+'">';
+	node+=' <i class="fa fa-bookmark"></i> 您的主题 <a href="'+basePath+'read?id='+themeId+'">'
 	+themeName+'</a>于<span style="color:#929191;">'+time+'</span> 被';
-	node+='<span style="color:rgb(217,83,79); font-weight: bold;"> '+type+' </span></div><div class="col-md-2 col-lg-2 tipRow"><input type="checkbox" class="tipDelete"></div></div>';
+	node+='<span style="color:rgb(217,83,79); font-weight: bold;"> '+type+' </span></div><div class="col-md-1 col-lg-1 tipRow"><input type="checkbox" class="tipDelete"></div></div>';
 	$(".tipContainer:eq(0)").append(node);
 }
 function creatTipPageCol(pageNum,pageIndex){
@@ -517,7 +517,7 @@ function tip(e){
 	var page=$(e).text();
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/tipPageAjax",
+		url: basePath+"tipPageAjax",
 		data: {
 			pageIndex:page
 		},
@@ -539,7 +539,7 @@ function tipBefore(){
 	var page=tipIndex-1;
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/tipPageAjax",
+		url: basePath+"tipPageAjax",
 		data: {
 			pageIndex:page
 		},
@@ -561,7 +561,7 @@ function tipAfter(){
 	var page=tipIndex+1;
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/tipPageAjax",
+		url: basePath+"tipPageAjax",
 		data: {
 			pageIndex:page
 		},

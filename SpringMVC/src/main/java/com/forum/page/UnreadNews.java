@@ -56,6 +56,7 @@ public class UnreadNews {
 				unreadNum+=rs.getInt(1);
 			}
 			login.setUnreadNews(unreadNum);
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -32,11 +32,15 @@ function loging(){
 			else if(result=="passfailed1"){
 				
 				$('#modal-container-835836').modal('show');
-				$("#infocontext").html("账号或密码错误");
+				$("#infocontext").html("密码错误");
 			}
 			else if(result=="passfailed2"){
 				$('#modal-container-835836').modal('show');
 				$("#infocontext").html("请输入完整信息");
+			}
+			else if(result=="passfailed3"){
+				$('#modal-container-835836').modal('show');
+				$("#infocontext").html("账号不存在");
 			}
 		},
 		error: function(jqXHR){

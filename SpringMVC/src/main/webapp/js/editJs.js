@@ -54,7 +54,7 @@ $(document).ready(function(){
 	   var reg=/"/g;
 	   var themeClass=$('#themeClass').val();
 	   var theme=$("#theme").val();
-	   content=content.replace(reg,' ');
+	   theme=theme.replace(reg,'&quot;');
 	   $("#postContent").val(content);
 	   if(content==""){
 		   e.preventDefault();
@@ -69,7 +69,7 @@ $(document).ready(function(){
 });
 
 function turnSearch(){
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
+	var url=basePath+"search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
     url=encodeURI(encodeURI(url));
     window.location.href=url;
 }

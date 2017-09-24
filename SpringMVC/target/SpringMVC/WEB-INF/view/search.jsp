@@ -19,16 +19,16 @@
      <div id="TopBanner">
         <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村论坛</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href=""><i class="fa fa-search"></i> 搜索结果</a></li>
         </ul>
         <ul id="BannerRight">
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
-            <li><a href="#">首页</a></li>
+            <li><a href="http://localhost:8080/beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
-            <li><a href="http://localhost:8080/SpringMVC/mail">消息</a></li>
+            <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
             <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
-            <li><a href='#' class="personalHref"><img src="http://localhost:8080/SpringMVC/indexImage/indexImg.jpg" alt="用户头像"></a></li>
+            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" alt="用户头像"></a></li>
         </ul>
         <div id="bannerBottom">
         Beautiful Country Forum
@@ -100,20 +100,24 @@
    		for(var j=0;j<themeArray.themes[i].label.length;j++){
    			labelArray.push(themeArray.themes[i].label[j]);
    		}
-   		creatCol(themeArray.themes[i].reply,labelArray,themeArray.themes[i].themeName,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].floorTime,themeArray.themes[i].floorName,themeArray.themes[i].enlighten,themeArray.themes[i].userId,themeArray.themes[i].floorId,themeArray.themes[i].themeId);
+   		creatCol(themeArray.themes[i].reply,labelArray,themeArray.themes[i].themeName,themeArray.themes[i].userName,themeArray.themes[i].themeTime,themeArray.themes[i].floorTime,themeArray.themes[i].floorName,themeArray.themes[i].enlighten,themeArray.themes[i].userId,themeArray.themes[i].floorId,themeArray.themes[i].themeId,themeArray.themes[i].accept,themeArray.themes[i].recommend);
    		}
 	}
    	var b="<%=b%>";
    	var userId_1="<%=userBean.getUserId()%>";
    	if(b!="true"){
    		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-   		var ImgObj=new Image();
-		ImgObj.src="http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg";
-		 if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)){
-		 	$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
-		 }
+		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
+		 
    	}else{
    		$("#BannerRight").hide();
    	}	
+   	var unReadNum="<%=userBean.getUnreadNews()%>";
+	if(unReadNum=='0'){
+		$(".unread").hide();	
+	}else{
+		$(".unread").show();
+		$(".unread").text(unReadNum);
+	}
 </script>
 </html>

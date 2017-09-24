@@ -40,6 +40,7 @@ public class MailRefresh extends Refresh {
 			}
 			json=json.substring(0, json.length()-1);
 			json+="]}";
+			con.close();
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -1,19 +1,15 @@
 package com.forum.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -28,24 +24,20 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
-
 import com.forum.login.LoginBean;
 import com.forum.page.EmailRefresh;
 import com.forum.page.FloorTimeHandle;
+import com.forum.page.LevelHandle;
 import com.forum.page.MailRefresh;
 import com.forum.page.PageRefresh;
 import com.forum.page.PointChange;
 import com.forum.page.ReadRefresh;
 import com.forum.page.SearchRefresh;
-import com.forum.page.TimeHandle;
+import com.forum.page.TipRefresh;
 import com.forum.page.UnreadNews;
 
 @Controller
@@ -61,7 +53,7 @@ public class forumController {
 			driver="com.mysql.jdbc.Driver";
 			url="jdbc:mysql://localhost:3306/countryforum?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 			user="root";
-			password="13750984796"; 
+			password="15869105934"; 
 			try {
 				Class.forName(driver);
 				con=DriverManager.getConnection(url,user,password);
@@ -124,8 +116,43 @@ public class forumController {
 				}else{
 					model.addAttribute("pageNum",1);
 				}
-				rs.close();
+				String hotNum;
+				String newsNum;
+				String tourNum;
+				String activeNum;
+				String nobNum;
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='热门帖子'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					hotNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("hotNum", hotNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='新闻推荐'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					newsNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("newsNum", newsNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='旅游推荐'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					tourNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("tourNum", tourNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='活动推荐'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					activeNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("activeNum", activeNum);
+				}
+				sql=con.prepareStatement("select count(*) from label,themelabel where label.labelId=themelabel.labelId and labelName='吐槽灌水'");
+				rs=sql.executeQuery();
+				if(rs.next()){
+					nobNum=String.valueOf(rs.getInt(1));
+					model.addAttribute("nobNum", nobNum);
+				}
 				sql.close();
+				rs.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -137,10 +164,12 @@ public class forumController {
 			model.addAttribute("themeInfo",json);
 			model.addAttribute("pageIndex",pageIndex);
 			return "thread";
-			
 		}
+		
 		@RequestMapping(value="/pageContent",method=RequestMethod.POST)
 		 public void pageContent(HttpServletRequest request,HttpServletResponse response){
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 			try {
 				ResultSet rs;
 				PreparedStatement sql;
@@ -157,7 +186,7 @@ public class forumController {
 				String userId=login.getUserId();
 				String themeId=uuid.toString().replace("-", "");
 				if(theme!=null&&themeClass!=null&&themeContent!=null){
-					sql=con.prepareStatement("insert into theme values (?,?,?,?,?,0,0,1)");
+					sql=con.prepareStatement("insert into theme values (?,?,?,?,?,0,0,1,0,0,0)");
 					sql.setString(1,themeId);
 					sql.setString(2,theme);
 					sql.setString(3,userId);
@@ -174,9 +203,9 @@ public class forumController {
 					sql.setString(1, themeId);
 					sql.setString(2, themeClass);
 					sql.executeUpdate();
-					response.sendRedirect("http://localhost:8080/SpringMVC/forum/1");
-					rs.close();
 					sql.close();
+					rs.close();
+					response.sendRedirect(basePath+"forum/1");
 				}
 			} catch (SQLException | IOException e) {
 				// TODO Auto-generated catch block
@@ -186,6 +215,8 @@ public class forumController {
 		
 		@RequestMapping(value="/search",method=RequestMethod.GET)
 			public String searchServlet(HttpServletRequest request,HttpServletResponse response,ModelMap model){
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 			ResultSet rs;
 			PreparedStatement sql = null;
 			SearchRefresh search=new SearchRefresh();
@@ -199,9 +230,9 @@ public class forumController {
 				sql.setString(2, searchContent);
 				rs=sql.executeQuery();
 				if(rs.next()){
-					response.sendRedirect("http://localhost:8080/SpringMVC/personal/"+rs.getString("userId"));
+					response.sendRedirect(basePath+"personal/"+rs.getString("userId"));
 				}else{
-					response.sendRedirect("http://localhost:8080/SpringMVC/hello");
+					response.sendRedirect(basePath+"hello");
 				}
 			}else{
 				json=search.refresh(1, 10, searchContent, searchClass);
@@ -227,6 +258,8 @@ public class forumController {
 					}
 					model.addAttribute("pageNum",pageNum);
 				}
+				sql.close();
+				rs.close();
 				model.addAttribute("themeInfo",json);
 			}else{
 				sql=con.prepareStatement("select count(*) from floor,user,themefloor,theme where floorUserId=userId and themefloor.floorId=floor.floorId and themefloor.themeId=theme.themeId and hide=1 and floorUserId=? UNION select count(*) from userresponse,themefloor,theme  where userresponse.floorId=themefloor.floorId and theme.themeId=themefloor.themeId and hide=1 and responseId=? ");
@@ -243,6 +276,8 @@ public class forumController {
 				}else{
 					pageNum=num/10+1;
 				}
+				sql.close();
+				rs.close();
 				model.addAttribute("pageNum",pageNum);
 				model.addAttribute("themeInfo_1",json);
 			}
@@ -251,8 +286,6 @@ public class forumController {
 			}
 			model.addAttribute("searchContent",searchContent);
 			model.addAttribute("searchClass",searchClass);
-			rs.close();
-			sql.close();
 			}catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
@@ -261,12 +294,14 @@ public class forumController {
 		}
 		@RequestMapping(value="/edit",method=RequestMethod.GET)
 			public String editServlet(HttpServletRequest request,HttpServletResponse response){
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 			HttpSession session=request.getSession();
 			LoginBean login=(LoginBean)session.getAttribute("userBean");
 			boolean b=login==null||login.getUserId()==null||login.getUserId().length()==0;
 			try{
 				if(b){
-					response.sendRedirect("http://localhost:8080/SpringMVC/login");
+					response.sendRedirect(basePath+"login");
 				}else{
 					UnreadNews unread=new UnreadNews();
 					unread.find(login.getUserId(), session);
@@ -279,6 +314,8 @@ public class forumController {
 		}
 		@RequestMapping(value="/personal/{userId}",method=RequestMethod.GET)
 		    public String personalServlet(@PathVariable("userId") String userId,HttpServletRequest request,HttpServletResponse response,ModelMap model){
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 			ResultSet rs=null;
 			PreparedStatement sql = null;
 			HttpSession session=request.getSession();
@@ -289,17 +326,15 @@ public class forumController {
 				sql.setString(1, userId);
 				rs=sql.executeQuery();
 				if(!rs.next()){
-					response.sendRedirect("http://localhost:8080/SpringMVC/hello");
+					response.sendRedirect(basePath+"hello");
 				}
-				rs.close();
-				sql.close();
 			} catch (SQLException | IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			if(userId.equals("")||userId==null){
 				try {
-					response.sendRedirect("http://localhost:8080/SpringMVC/login");
+					response.sendRedirect(basePath+"login");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -327,17 +362,19 @@ public class forumController {
 					model.addAttribute("birth",rs.getString("userBirth"));
 					model.addAttribute("userId",userId);
 				}
-				rs.close();
-				sql.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if(!b){
 				String json;
+				String tipJson;
 				EmailRefresh email=new EmailRefresh();
+				TipRefresh tip=new TipRefresh();
 				json=email.refresh(1, 4, login.getUserId());
+				tipJson=tip.refresh(1,8,login.getUserId());
 				model.addAttribute("json", json);
+				model.addAttribute("tipJson", tipJson);
 				int num=0;
 				int pageNum=0;
 				try {
@@ -353,19 +390,33 @@ public class forumController {
 						pageNum=num/4+1;
 					}
 					model.addAttribute("pageNum", pageNum);
-					rs.close();
+					sql=con.prepareStatement("select count(*) from tip,theme where tip.themeId=theme.themeId and userId=? ");
+					sql.setString(1, login.getUserId());
+					rs=sql.executeQuery();
+					if(rs.next()){
+						num=rs.getInt(1);
+					}
+					if(num%8==0){
+						pageNum=num/8;
+					}else{
+						pageNum=num/8+1;
+					}
 					sql.close();
+					rs.close();
+					model.addAttribute("tipNum", pageNum);
+					UnreadNews unread=new UnreadNews();
+					unread.find(login.getUserId(), session);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				UnreadNews unread=new UnreadNews();
-				unread.find(login.getUserId(), session);
 			}
 			return "personal";
 		}
 		@RequestMapping(value="/mail",method=RequestMethod.GET)
 		 	public String mailServlet(HttpServletRequest request,HttpServletResponse response,ModelMap model){
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 			ResultSet rs;
 			PreparedStatement sql = null;
 			HttpSession session=request.getSession();
@@ -373,7 +424,7 @@ public class forumController {
 			boolean b=login==null||login.getUserId()==null||login.getUserId().length()==0;
 			try{
 				if(b){
-					response.sendRedirect("http://localhost:8080/SpringMVC/login");
+					response.sendRedirect(basePath+"login"); 
 				}
 			}catch (Exception e) {
 				// TODO: handle exception
@@ -413,8 +464,8 @@ public class forumController {
 				UnreadNews unread=new UnreadNews();
 				unread.find(userId, session);
 				model.addAttribute("pageNum",pageNum);
-				rs.close();
 				sql.close();
+				rs.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -427,51 +478,215 @@ public class forumController {
 			return "hello";
 		}
 		@RequestMapping(value="/read",method=RequestMethod.GET)
-			public String readServlet(@RequestParam(value="id",required=true) String id,@RequestParam(value="pageIndex",required=false) String pageIndex,ModelMap model,HttpServletRequest request) throws SQLException{
-			
-			try {
-				ResultSet rs;
-				PreparedStatement sql;
-				if(pageIndex==null){
-					pageIndex="1";
-				}
-				int pageIndex1=Integer.parseInt(pageIndex);
-				String themeId=id;	
-			 	String json;
-			 	System.out.println(pageIndex1);
-			 	System.out.println(themeId);
-						
-			 	sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime  desc");
-						sql.setString(1,themeId);
-						rs=sql.executeQuery();
-						rs.last();
-						int totalRecoder=rs.getRow();
-						rs.first();
-						int pageNum=0;
-						
-						if(totalRecoder%5==0){
-							pageNum=totalRecoder/5;
-						}else{
-							pageNum=totalRecoder/5+1;
-						}
-					
-						int startIndex=5*pageIndex1-4;
-						int endIndex=5*pageIndex1;
-						ReadRefresh read=new ReadRefresh();
-						json=read.refresh(startIndex, endIndex,themeId);
-						model.addAttribute("postPage",json);
-						model.addAttribute("pageIndex",pageIndex1);
-						model.addAttribute("pageNum",pageNum);
-					
-						rs.close();
-						sql.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		public String readServlet(@RequestParam(value="id",required=true) String id,@RequestParam(value="pageIndex",required=false) String pageIndex,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+		try {
+			HttpSession session=request.getSession();
+			LoginBean userBean=(LoginBean) session.getAttribute("userBean");
+			ResultSet rs;
+			PreparedStatement sql;
+			if(pageIndex==null){
+				pageIndex="1";
 			}
+			int pageIndex1=Integer.parseInt(pageIndex);
+			String Id=id;	
+		 	String json;
+		 	int n = Id.length()-Id.replaceAll(",", "").length();
+		 	if(n==0){
+					String themeId=Id;
+					sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime desc");
+					sql.setString(1,themeId);
+					rs=sql.executeQuery();
+					int totalRecoder=0;
+					if(rs.next()){
+						rs.last();
+						totalRecoder=rs.getRow();
+						rs.first();
+					}
+					
+					
+					int pageNum=0;
+					
+					if(totalRecoder%5==0){
+						pageNum=totalRecoder/5;
+					}else{
+						pageNum=totalRecoder/5+1;
+					}
+				
+					int startIndex=5*pageIndex1-4;
+					int endIndex=5*pageIndex1;
+					ReadRefresh read=new ReadRefresh();
+					json=read.refresh(startIndex, endIndex,themeId);
+					
+					sql=con.prepareStatement("select themeId,themeName,postUserId,themeTime,content,recommend,accept from theme where themeId=?");
+					sql.setString(1,themeId);
+					rs=sql.executeQuery();
+					rs.next();
+					String themeName=rs.getString("themeName");
+					String themeTime=rs.getString("themeTime");
+					String postUserId=rs.getString("postUserId");
+					String content=rs.getString("content");
+					int accept=rs.getInt("accept");
+					int recommend=rs.getInt("recommend");
+					model.addAttribute("themeId",themeId);
+					model.addAttribute("themeName",themeName);
+					model.addAttribute("themeTime",themeTime);
+					model.addAttribute("postUserId",postUserId);
+					model.addAttribute("content",content);
+					model.addAttribute("accept",accept);
+					model.addAttribute("recommend",recommend);
+					
+					
+					String lastFloorId="1";
+					sql=con.prepareStatement("select floor.floorId from floor,themefloor where themeId=? and themefloor.floorId=floor.floorId order by  floor.floorTime  desc");
+					sql.setString(1,themeId);
+					rs=sql.executeQuery();
+					if(rs.next()){
+					lastFloorId=rs.getString("floorId");}
+					model.addAttribute("lastFloorId",lastFloorId);
+					
+					
+					boolean great;
+					sql=con.prepareStatement("select userId from usergreat where userId=? and themeId=?");
+					sql.setString(1,userBean.getUserId());
+					sql.setString(2,themeId);
+					rs=sql.executeQuery();
+					if(rs.next()){
+					great=true;}
+					else{
+					great=false;}
+					model.addAttribute("great",great);
+					
+					
+					sql=con.prepareStatement("select userName,userPoints from user where userId=?");
+					sql.setString(1,postUserId);
+					rs=sql.executeQuery();
+					rs.next();
+					String userName=rs.getString("userName");
+					int userPoints1=rs.getInt("userPoints");
+					String title1 = null;
+					int level1=1;
+					PointChange point=new  PointChange();
+					title1=point.handle(userPoints1);
+					LevelHandle level=new LevelHandle();
+					level1=level.handle(userPoints1);
+					model.addAttribute("userName",userName);
+					model.addAttribute("title1",title1);
+					model.addAttribute("level1",level1);
+					
+					sql=con.prepareStatement("select labelName from label,themelabel where themeId=? and themelabel.labelId=label.labelId");
+					sql.setString(1,themeId);
+					rs=sql.executeQuery();
+					LinkedList<String> label=new LinkedList<String>();
+					while(rs.next()){
+						label.add(rs.getString("labelName"));
+					}
+					model.addAttribute("label",label.toString());
+					
+					
+					sql=con.prepareStatement("select DISTINCT userId from user where blockForbidden=1 ");
+					rs=sql.executeQuery();
 
-			return "post";
+					LinkedList<String> forbidden=new LinkedList<String>();
+					while(rs.next()){
+						forbidden.add(rs.getString("userId"));
+					}
+					model.addAttribute("forbidden",forbidden.toString());
+					
+					
+					
+					model.addAttribute("postPage",json);
+					model.addAttribute("pageIndex",pageIndex1);
+					model.addAttribute("pageNum",pageNum);
+				
+					}
+		 	else if(n==1){
+		 		int number=1;
+		 		String themeId=Id.substring(0, Id.indexOf(","));
+		 		int floorNumber=Integer.parseInt(Id.substring(Id.indexOf(",")+1));
+		 		sql=con.prepareStatement("SELECT floor.floorId FROM themefloor,floor WHERE themefloor.floorId=floor.floorId and themeId=? ORDER BY floorTime");
+				sql.setString(1,themeId);
+				rs=sql.executeQuery();
+
+				while(rs.next()){
+					String nowId=rs.getString("floor.floorId");
+					if(nowId.equals(Id)){
+						
+						break;
+					}
+					else{
+						number=number+1;
+					}
+					
+				}
+
+				
+				int pageGoto=1;
+				
+				if(number%5==0){
+					pageGoto=number/5;
+				}else{
+					pageGoto=number/5+1;
+				}
+	
+	
+				try {
+					response.sendRedirect(basePath+"read?id="+themeId+"&pageIndex="+pageGoto+"#location"+floorNumber);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+		 	}
+		 	else if(n==2){
+		 		
+		 		int number=1;
+		 		String themeId=Id.substring(0, Id.indexOf(","));
+		 		String floorId=Id.substring(0, Id.indexOf(",",Id.indexOf(",")+1 ));
+
+		 		sql=con.prepareStatement("SELECT floor.floorId FROM themefloor,floor WHERE themefloor.floorId=floor.floorId and themeId=? ORDER BY floorTime");
+				sql.setString(1,themeId);
+				rs=sql.executeQuery();
+
+				while(rs.next()){
+					String nowId=rs.getString("floor.floorId");
+
+					if(nowId.equals(floorId)){
+						
+						break;
+					}
+					else{
+						number=number+1;
+					}
+					
+				}
+
+				
+				int pageGoto=1;
+				
+				if(number%5==0){
+					pageGoto=number/5;
+				}else{
+					pageGoto=number/5+1;
+				}
+				model.addAttribute("locationIn",Id);
+				
+				try {
+					response.sendRedirect(basePath+"read?id="+themeId+"&pageIndex="+pageGoto+"#locationIn"+Id);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		 	}
+		 	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		return "post";
+	}
 		@RequestMapping(value="/login",method=RequestMethod.GET)
 	    public String loginServlet(){
 		return "login";
@@ -563,10 +778,6 @@ public class forumController {
 				String userName=request.getParameter("userName");
 				String password=request.getParameter("password");
 				String repassword=request.getParameter("repassword");
-				System.out.println(userId);
-				System.out.println(userName);
-				System.out.println(password);
-				System.out.println(repassword);
 				PrintWriter out = response.getWriter();
 			 	StringBuffer json=new StringBuffer();
 			 	String result;
@@ -692,12 +903,10 @@ public class forumController {
 				String userId=request.getParameter("userId");
 				PrintWriter out = response.getWriter();
 
-				sql=con.prepareStatement("update user set blockForbidden='1' where userId=?");
+				sql=con.prepareStatement("update user set blockForbidden=1 where userId=?");
 				sql.setString(1,userId);
 				sql.executeUpdate();
 				
-				rs.close();
-				sql.close();
 						
 											
 					out.print("{\"success\":true}");
@@ -714,6 +923,224 @@ public class forumController {
 			}
 	}
 		
+		@RequestMapping(value="/removeBanAjax",method=RequestMethod.POST)
+		 public void removeBanAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs = null;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				String userId=request.getParameter("userId");
+				PrintWriter out = response.getWriter();
+
+				sql=con.prepareStatement("update user set blockForbidden=0 where userId=?");
+				sql.setString(1,userId);
+				sql.executeUpdate();
+				
+						
+											
+					out.print("{\"success\":true}");
+					out.flush();  
+					out.close(); 
+						
+					
+					
+
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
+		@RequestMapping(value="/acceptAjax",method=RequestMethod.POST)
+		 public void acceptAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs = null;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				String userId=request.getParameter("postUserId");
+				String themeId=request.getParameter("themeId");
+				PrintWriter out = response.getWriter();
+				sql=con.prepareStatement("update theme set accept=1 where themeId=? ");
+				sql.setString(1,themeId);
+				sql.executeUpdate();
+				
+				sql=con.prepareStatement("select userPoints from user where userId=? ");
+				sql.setString(1,userId);
+				rs=sql.executeQuery();
+				
+				int userPoints1;
+				if(rs.next()){userPoints1=rs.getInt("userPoints")+50;}
+				else{
+					userPoints1=50;
+				}
+
+				
+				sql=con.prepareStatement("select acceptEver from theme where themeId=? ");
+				sql.setString(1,themeId);
+				rs=sql.executeQuery();
+				if(rs.next()){
+					int acceptEver=rs.getInt("acceptEver");
+				if(acceptEver!=1){
+				
+				sql=con.prepareStatement("update user set userPoints=? where userId=? ");
+				sql.setInt(1,userPoints1);
+				sql.setString(2,userId);
+				sql.executeUpdate();
+				
+				sql=con.prepareStatement("update theme set acceptEver=1 where themeId=? ");
+				sql.setString(1,themeId);
+				sql.executeUpdate();
+				
+				}
+				}
+					
+				rs.close();
+				sql.close();
+											
+					out.print("{\"success\":true}");
+					out.flush();  
+					out.close(); 
+						
+					
+					
+
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
+		@RequestMapping(value="/removeAcceptAjax",method=RequestMethod.POST)
+		 public void removeAcceptAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs = null;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				String userId=request.getParameter("postUserId");
+				String themeId=request.getParameter("themeId");
+				PrintWriter out = response.getWriter();
+				sql=con.prepareStatement("update theme set accept=0 where themeId=? ");
+				sql.setString(1,themeId);
+				sql.executeUpdate();
+												
+					out.print("{\"success\":true}");
+					out.flush();  
+					out.close(); 
+						
+					
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
+		@RequestMapping(value="/recommendAjax",method=RequestMethod.POST)
+		 public void recommendAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs = null;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				String userId=request.getParameter("userId");
+				String themeId=request.getParameter("themeId");
+				PrintWriter out = response.getWriter();
+				
+				Date now=new Date();
+				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String datetime=dateFormat.format(now);
+
+				sql=con.prepareStatement("insert into usergreat values(?,?,?) ");
+				sql.setString(1,themeId);
+				sql.setString(2,userId);
+				sql.setString(3,datetime);
+				sql.executeUpdate();
+				
+				sql=con.prepareStatement("select recommend from theme where themeId=? ");
+				sql.setString(1,themeId);
+				rs=sql.executeQuery();
+				
+				int recommend1;
+				if(rs.next()){recommend1=rs.getInt("recommend")+1;}
+				else{
+					recommend1=1;
+				}
+				
+		
+
+				sql=con.prepareStatement("update theme set recommend=? where themeId=? ");
+				sql.setInt(1,recommend1);
+				sql.setString(2,themeId);
+				sql.executeUpdate();
+				
+					
+				rs.close();
+				sql.close();
+											
+					out.print("{\"success\":\""+recommend1+"\"}");
+					out.flush();  
+					out.close(); 
+						
+					
+					
+
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+		
+		
+		@RequestMapping(value="/removeRecommendAjax",method=RequestMethod.POST)
+		 public void removeRecommendAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
+			try {
+				ResultSet rs = null;
+				PreparedStatement sql;
+				request.setCharacterEncoding("UTF-8");
+				String userId=request.getParameter("userId");
+				String themeId=request.getParameter("themeId");
+				PrintWriter out = response.getWriter();
+				
+
+				sql=con.prepareStatement("delete from usergreat where themeId=? and userId=? ");
+				sql.setString(1,themeId);
+				sql.setString(2,userId);
+				sql.executeUpdate();
+				
+				sql=con.prepareStatement("select recommend from theme where themeId=? ");
+				sql.setString(1,themeId);
+				rs=sql.executeQuery();
+				
+				int recommend1;
+				if(rs.next()){recommend1=rs.getInt("recommend")-1;}
+				else{
+					recommend1=0;
+				}
+		
+				sql=con.prepareStatement("update theme set recommend=? where themeId=? ");
+				sql.setInt(1,recommend1);
+				sql.setString(2,themeId);
+				sql.executeUpdate();
+				
+					
+				rs.close();
+				sql.close();
+											
+					out.print("{\"success\":\""+recommend1+"\"}");
+					out.flush();  
+					out.close(); 
+						
+					
+					
+
+	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 		
 		@RequestMapping(value="/responseInputAjax",method=RequestMethod.POST)
 		 public void responseInputAjax(HttpServletRequest request,HttpServletResponse response) throws SQLException{
@@ -735,7 +1162,7 @@ public class forumController {
 
 				PrintWriter out = response.getWriter();
 			 	StringBuffer json=new StringBuffer();
-					if(content!=""||content!=null){	
+					if(content!=""&&content!=null){	
 						
 						sql=con.prepareStatement("select contentId from userresponse where floorId=? order by responseTime desc ");
 						sql.setString(1,floorId);
@@ -744,7 +1171,6 @@ public class forumController {
 						if(rs.next()){
 						String lastcontentId=rs.getString("contentId");
 						number=lastcontentId.substring(lastcontentId.indexOf(",",lastcontentId.indexOf(",")+1) + 1);
-						System.out.println(lastcontentId);
 						}
 						int number1=Integer.parseInt(number)+1;
 						String contentId=floorId+","+number1;
@@ -821,7 +1247,7 @@ public class forumController {
 
 				PrintWriter out = response.getWriter();
 			 	StringBuffer json=new StringBuffer();
-					if(content!=""||content!=null){	
+					if(content!=""&&content!=null){	
 						
 						sql=con.prepareStatement("select userName,userPoints from user where userId=?");
 						sql.setString(1,userId);
@@ -831,6 +1257,8 @@ public class forumController {
 						int userPoints=rs.getInt("userPoints");
 						PointChange point=new PointChange();
 						String userTitle=point.handle(userPoints);
+						LevelHandle level=new LevelHandle();
+						int userLevel=level.handle(userPoints);
 						
 						
 						int userPoints1=userPoints+2;
@@ -859,6 +1287,7 @@ public class forumController {
 						json.append("\"userId\":\""+userId+"\",");
 						json.append("\"floorNumber\":\""+floorNumber1+"\",");
 						json.append("\"userTitle\":\""+userTitle+"\",");
+						json.append("\"userLevel\":\""+userLevel+"\",");
 						json.append("\"floorId\":\""+floorId+"\",");
 						json.append("\"content\":\""+content+"\",");
 						json.append("\"time\":\""+datetime1+"\"}");
@@ -933,11 +1362,13 @@ public class forumController {
 		
 		@RequestMapping(value="/exit",method=RequestMethod.GET)
 		  	public void exitServlet(HttpServletRequest request,HttpServletResponse response){
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 			HttpSession session=request.getSession();
 			session.removeAttribute("userBean");
 			session.invalidate();
 			try {
-				response.sendRedirect("http://localhost:8080/SpringMVC/forum/1");
+				response.sendRedirect(basePath+"forum/1");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -946,6 +1377,8 @@ public class forumController {
 		
 		@RequestMapping(value="/exit1",method=RequestMethod.GET)
 	  	public void exit1Servlet(@RequestParam(value="id",required=true) String id,@RequestParam(value="pageIndex",required=false) String pageIndex,HttpServletRequest request,HttpServletResponse response){
+		String path = request.getContextPath();
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 		HttpSession session=request.getSession();
 		session.removeAttribute("userBean");
 		session.invalidate();
@@ -955,7 +1388,7 @@ public class forumController {
 		int pageIndex1=Integer.parseInt(pageIndex);
 		String themeId=id;
 		try {
-			response.sendRedirect("http://localhost:8080/SpringMVC/read?id="+themeId+"&pageIndex="+pageIndex1);
+			response.sendRedirect(basePath+"read?id="+themeId+"&pageIndex="+pageIndex1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1027,8 +1460,6 @@ public class forumController {
 					sql.setString(2,userId);
 					sql.executeUpdate();
 				}
-			
-				sql.close();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out = response.getWriter();
 				out.print("{\"success\":true}");
@@ -1049,8 +1480,6 @@ public class forumController {
 				sql.setString(1,password);
 				sql.setString(2,userId);
 				sql.executeUpdate();
-			
-				sql.close();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out = response.getWriter();
 				out.print("{\"success\":true}");
@@ -1126,24 +1555,52 @@ public class forumController {
 			String editClass=request.getParameter("editClass");
 			String themeId=request.getParameter("themeId");
 			PreparedStatement sql = null;
+			ResultSet rs=null;
 			String sqlStm=null;
+			String stm=null;
+			String userId = null;
+			UUID uuid=UUID.randomUUID();
+			String tipId=uuid.toString().replace("-", "");
+			Date now=new Date();
+			SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String nowTime=dateFormat.format(now);
+			try {
+				sql=con.prepareStatement("select postUserId from theme where themeId=?");
+				sql.setString(1, themeId);
+				rs=sql.executeQuery();
+				if(rs.next()){
+					userId=rs.getString("postUserId");
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if(editClass.equals("加精")){
 				sqlStm="update theme set enlighten=1 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'加精')";
 			}else if(editClass.equals("置顶")){
 				sqlStm="update theme set stick=1 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'置顶')";
 			}else if(editClass.equals("删除")){
 				sqlStm="update theme set hide=0 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'删除')";
 			}else if(editClass.equals("取消加精")){
 				sqlStm="update theme set enlighten=0 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'取消加精')";
 			}else if(editClass.equals("取消置顶")){
 				sqlStm="update theme set stick=0 where themeId=?";
+				stm="insert into tip values (?,?,?,?,'取消置顶')";
 			}
 			try{
 				sql=con.prepareStatement(sqlStm);
 				sql.setString(1, themeId);
 				sql.executeUpdate();
-			
-				sql.close();
+				sql=con.prepareStatement(stm);
+				sql.setString(1, tipId);
+				sql.setString(2, themeId);
+				sql.setString(3, userId);
+				sql.setString(4, nowTime);
+				sql.executeUpdate();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out_1 = response.getWriter();
 				out_1.print("{\"success\":true}");
@@ -1161,26 +1618,61 @@ public class forumController {
 			PreparedStatement sql = null;
 			try{
 				for(int i=0;i<themesId.length;i++){
+					ResultSet rs=null;
+					String userId = null;
+					UUID uuid=UUID.randomUUID();
+					String tipId=uuid.toString().replace("-", "");
+					Date now=new Date();
+					SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String nowTime=dateFormat.format(now);
+					sql=con.prepareStatement("select postUserId from theme where themeId=?");
+					sql.setString(1, themesId[i]);
+					rs=sql.executeQuery();
+					if(rs.next()){
+						userId=rs.getString("postUserId");
+					}
 					if(editClass.equals("加精")){
 						sql=con.prepareStatement("update theme set enlighten=1 where themeId=?");
 						sql.setString(1, themesId[i]);
+						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'加精')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
 						sql.executeUpdate();
 					}else if(editClass.equals("置顶")){
 						sql=con.prepareStatement("update theme set stick=1 where themeId=?");
 						sql.setString(1, themesId[i]);
 						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'置顶')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
+						sql.executeUpdate();
 					}else if(editClass.equals("删除")){
 						sql=con.prepareStatement("update theme set hide=0 where themeId=?");
 						sql.setString(1, themesId[i]);
+						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'删除')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
 						sql.executeUpdate();
 					}else if(editClass.equals("取消加精")){
 						sql=con.prepareStatement("update theme set enlighten=0 where themeId=?");
 						sql.setString(1, themesId[i]);
 						sql.executeUpdate();
+						sql=con.prepareStatement("insert into tip values (?,?,?,?,'取消加精')");
+						sql.setString(1, tipId);
+						sql.setString(2, themesId[i]);
+						sql.setString(3, userId);
+						sql.setString(4, nowTime);
+						sql.executeUpdate();
 					}
 				}
-			
-				sql.close();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out_1 = response.getWriter();
 				out_1.print("{\"success\":true}");
@@ -1223,8 +1715,6 @@ public class forumController {
 						out_1.flush();
 						out_1.close();
 					}
-					rs.close();
-					sql.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1263,8 +1753,6 @@ public class forumController {
 				sql.setString(4, content);
 				sql.setString(5, nowTime);
 				sql.executeUpdate();
-				rs.close();
-				sql.close();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out_1 = response.getWriter();
 				out_1.print("{\"success\":true}");
@@ -1304,8 +1792,6 @@ public class forumController {
 				sql=con.prepareStatement("delete from email where emailId=?");
 				sql.setString(1, emailId);
 				sql.executeUpdate();
-			
-				sql.close();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out_1 = response.getWriter();
 				out_1.print("{\"success\":true}");
@@ -1315,5 +1801,53 @@ public class forumController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		@RequestMapping(value="/tipPageAjax",method=RequestMethod.POST)
+		public void tipPageAjax(HttpServletRequest request, HttpServletResponse response){
+			int pageIndex=Integer.parseInt(request.getParameter("pageIndex"));
+			HttpSession session=request.getSession();
+			LoginBean login=(LoginBean) session.getAttribute("userBean");
+			String json;
+			int startIndex=8*pageIndex-7;
+			int endIndex=8*pageIndex;
+			TipRefresh tip=new TipRefresh();
+			json=tip.refresh(startIndex, endIndex, login.getUserId());
+			response.setCharacterEncoding("UTF-8");
+			try {
+				PrintWriter out = response.getWriter();
+				out.print(json);
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		@RequestMapping(value="/tipDeleteAjax",method=RequestMethod.POST)
+		public void tipDeleteAjax(HttpServletRequest request, HttpServletResponse response){
+			String tipId=request.getParameter("tipsId");
+			String[] tipsId=tipId.split(",");
+			PreparedStatement sql;
+			for(int i=0;i<tipsId.length;i++){
+				try {
+					sql=con.prepareStatement("delete from tip where tipId=? ");
+					sql.setString(1, tipsId[i]);
+					sql.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = null;
+			try {
+				out = response.getWriter();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			out.print("{\"success\":true}");
+			out.flush();
+			out.close();
 		}
 }

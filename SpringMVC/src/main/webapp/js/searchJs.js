@@ -38,7 +38,7 @@ $(function(){
 		     /* Act on the event */
 		   	 pageIndex++;
 		   	$('#pageIndex').val(pageIndex);
-		   	var url="http://localhost:8080/SpringMVC/searchAjax?pageIndex="+$('#pageIndex').val()+"&searchContent="+$("#searchContent_1").val()+"&searchClass="+$("#preSearchClass").val();
+		   	var url=basePath+"searchAjax?pageIndex="+$('#pageIndex').val()+"&searchContent="+$("#searchContent_1").val()+"&searchClass="+$("#preSearchClass").val();
 		   	url=encodeURI(encodeURI(url));
 		      $.ajax({
 		            url: url,
@@ -80,7 +80,7 @@ $(function(){
 		   });
 });
 function turnSearch(){
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
+	var url=basePath+"search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
     url=encodeURI(encodeURI(url));
     window.location.href=url;
 }
@@ -90,7 +90,7 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 	 for(var i=0;i<label.length;i++){
 		node+='<a href="javascript:void(0)" class="label_1" onclick="labelSearch(this)" >['+label[i]+']</a>';
 	}
-	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'" class="label_2">'+themeName+'</a>';
+	node+='<a href="'+basePath+'read?id='+themeId+'" class="label_2">'+themeName+'</a>';
 	if(parseInt(enlighten)==1){
 		node+='<i class="enlighten">精</i>';
 	}
@@ -100,23 +100,23 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 	if(accept=='1'){
 		node+='<i class="accept">编辑采用</i><i class="fa fa-database" style="margin-left:10px;"></i><i class="point">+50</i>';
 	}
-	node+='</div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_3"><a href="http://localhost:8080/SpringMVC/personal/'+userId+'">'
+	node+='</div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_3"><a href="'+basePath+'personal/'+userId+'">'
 	+userName+'</a><div>'+userTime+'</div></div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_4"><div>'
-	+floorTime+'</div><a href="http://localhost:8080/SpringMVC/personal/'+floorId+'">'+floorName+'</a></div></div></div>';
+	+floorTime+'</div><a href="'+basePath+'personal/'+floorId+'">'+floorName+'</a></div></div></div>';
 	$('#searchCon').append(node);
 }
 function creatCol_1(reply,content,userName,themeTime,floorTime,floorName,postUserId,floorId,themeId){
 	var node='<div class="row searchContentRow"><div class="col-md-1 col-lg-1 searchContentCol"><div class="searchContentCol_1 btn btn-primary">'
 		+reply+'</div></div><div class="col-md-7 col-lg-7 searchContentCol"><div class="searchContentCol_2">';
-	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'" class="label_2">回复：'+content+'</a>';
-	node+='</div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_3"><a href="http://localhost:8080/SpringMVC/personal/'+postUserId+'">'
+	node+='<a href="'+basePath+'read?id='+themeId+'" class="label_2">'+content+'</a>';
+	node+='</div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_3"><a href="'+basePath+'personal/'+postUserId+'">'
 	+userName+'</a><div>'+themeTime+'</div></div></div><div class="col-md-2 col-lg-2 searchContentCol"><div class="searchContentCol_4"><div>'
-	+floorTime+'</div><a href="http://localhost:8080/SpringMVC/personal/'+floorId+'">'+floorName+'</a></div></div></div>';
+	+floorTime+'</div><a href="'+basePath+'personal/'+floorId+'">'+floorName+'</a></div></div></div>';
 	$('#searchCon').append(node);
 }
 function labelSearch(e){
 	var str=$(e).text().substring(1,5);
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+str+"&searchClass=按标签搜索";
+	var url=basePath+"search?"+"searchContent="+str+"&searchClass=按标签搜索";
 	url=encodeURI(encodeURI(url));
 	window.location.href=url;
 }

@@ -20,6 +20,7 @@ $(document).ready(function(){
         width:'5em'
       });
     $('.themeDiv_1').css('display','none');
+    $('.searchInput').css('width','2.2em');
     },2000);
 });
   $('#myCarousel').carousel({
@@ -55,7 +56,7 @@ $(document).ready(function(){
    $('#nextPage').click(function(event) {
      /* Act on the event */
       $.ajax({
-            url: "http://localhost:8080/SpringMVC/pageAjax",
+            url: basePath+"pageAjax",
             type: 'POST',
             dataType: 'json',
             data:{
@@ -78,7 +79,7 @@ $(document).ready(function(){
            		if(pageIndex==parseInt(pageNum)){
            			$('#nextPage').hide();
            			$('.forumPagination li:last').hide();
-           			$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/forum/'+(pageIndex-1)+'">&larr; 上一页</a></li>');
+           			$('.forumPagination').prepend('<li><a href="'+basePath+'forum/'+(pageIndex-1)+'">&larr; 上一页</a></li>');
            		}
            		var nowHeight=$("#forumContentContainer").height();
            		$("#forumContentContainer").css('overflow','hidden');
@@ -111,7 +112,7 @@ $(document).ready(function(){
 	   var reg=/"/g;
 	   var themeClass=$('#themeClass').val();
 	   var theme=$("#theme").val();
-	   content=content.replace(reg,' ');
+	   theme=theme.replace(reg,'&quot;');
 	   $("#postContent").val(content);
 	   if(content==""){
 		   e.preventDefault();
@@ -159,7 +160,7 @@ $(document).ready(function(){
 	   var modalId=$("#modalId").val();
 	   $.ajax({
 		    type: "POST",
-			url: "http://localhost:8080/SpringMVC/editThemeAjax",
+			url: basePath+"editThemeAjax",
 			data: {
 				editClass:modalClass,
 				themeId:modalId
@@ -189,7 +190,7 @@ $(document).ready(function(){
 	   });
 	   $.ajax({
 		    type: "POST",
-			url: "http://localhost:8080/SpringMVC/editThemesAjax",
+			url: basePath+"editThemesAjax",
 			data: {
 				editClass:modalClass,
 				themesId:themesId
@@ -211,9 +212,9 @@ $(document).ready(function(){
 
 });
 function creatTopCol(labelName,themeName,themeId){
-  var node='<tr><td class="topTableTd" style="border-right: 0px;border-left: 0px;" ><a href="javascript:void(0)" class="label_1" onclick="labelSearch(this)" >['+labelName+']</a><a href="http://localhost:8080/SpringMVC/read?id='+themeId+'"class="label_2">'+themeName+'</a>';
+  var node='<tr><td class="topTableTd" style="border-right: 0px;border-left: 0px;" ><a href="javascript:void(0)" class="label_1" onclick="labelSearch(this)" >['+labelName+']</a><a href="'+basePath+'read?id='+themeId+'" class="label_2">'+themeName+'</a>';
   if(userIdentity=='1'){
-	  node+='<div class="chargeDiv" style="top:7px;right:-5px;" title="'+themeId+'">';
+	  node+='<div class="chargeDiv chargeDiv_1" style="top:7px;right:-50px;" title="'+themeId+'">';
 	  node+='<i class="fa fa-arrow-down" data-toggle="tooltip" title="取消置顶" ></i>'
 			+'<i class="fa fa-close" data-toggle="tooltip"  title="删除" ></i></div>';
   }
@@ -232,7 +233,7 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 	 for(var i=0;i<label.length;i++){
 		node+='<a href="javascript:void(0)" class="label_1" onclick="labelSearch(this)" >['+label[i]+']</a>';
 	}
-	node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'"class="label_2">'+themeName+'</a>';
+	node+='<a href="'+basePath+'read?id='+themeId+'"class="label_2">'+themeName+'</a>';
 	if(parseInt(enlighten)==1){
 		node+='<i class="enlighten">精</i>';
 	}
@@ -252,42 +253,42 @@ function creatCol(reply,label,themeName,userName,userTime,floorTime,floorName,en
 			node+='<i class="fa fa-arrow-up" data-toggle="tooltip" title="置顶" ></i>'
 			+'<i class="fa fa-close" data-toggle="tooltip"  title="删除" ></i></div><input type="checkbox" name="chargeBox" class="chargeBox" style="margin-left:5px" >';
 	}
-	node+='</div></div><div class="col-md-2 col-lg-2 forumContentCol"><div class="forumContentCol_3"><a href="http://localhost:8080/SpringMVC/personal/'+userId+'">'
+	node+='</div></div><div class="col-md-2 col-lg-2 forumContentCol"><div class="forumContentCol_3"><a href="'+basePath+'personal/'+userId+'">'
 	+userName+'</a><div>'+userTime+'</div></div></div><div class="col-md-2 col-lg-2 forumContentCol"><div class="forumContentCol_4"><div>'
-	+floorTime+'</div><a href="http://localhost:8080/SpringMVC/personal/'+floorId+'">'+floorName+'</a></div></div></div>';
+	+floorTime+'</div><a href="'+basePath+'personal/'+floorId+'">'+floorName+'</a></div></div></div>';
 	$('#forumContentContainer').append(node);
 }
 function creatPageCol(pageNum,pageIndex){
 	var node='';
 	for(var i=0;i<pageNum;i++){
-		node+='<li><a href="http://localhost:8080/SpringMVC/forum/'+(i+1)+'?enlighten='+pageEnlighten+'">'+(i+1)+'</a></li>';
+		node+='<li><a href="'+basePath+'forum/'+(i+1)+'?enlighten='+pageEnlighten+'">'+(i+1)+'</a></li>';
 	}
 	if(parseInt(pageIndex)!=1){
 		location.href = "#firstAnchor";
 	}
 	if(parseInt(pageNum)!=1&&parseInt(pageIndex)!=parseInt(pageNum)){
-		node+='<li><a href="http://localhost:8080/SpringMVC/forum/'+(parseInt(pageIndex)+1)+'?enlighten='+pageEnlighten+'">下一页 &rarr;</a></li>';
+		node+='<li><a href="'+basePath+'forum/'+(parseInt(pageIndex)+1)+'?enlighten='+pageEnlighten+'">下一页 &rarr;</a></li>';
 	}
 	$('.forumPagination').append(node);
 	$('.forumPagination > li:eq('+(parseInt(pageIndex)-1)+')').addClass("focus");
 	if(parseInt(pageIndex)!=1){
-		$('.forumPagination').prepend('<li><a href="http://localhost:8080/SpringMVC/forum/'+(parseInt(pageIndex)-1)+'?enlighten='+pageEnlighten+'">&larr; 上一页</a></li>');
+		$('.forumPagination').prepend('<li><a href="'+basePath+'forum/'+(parseInt(pageIndex)-1)+'?enlighten='+pageEnlighten+'">&larr; 上一页</a></li>');
 	}
 }
 function turnSearch(){
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
+	var url=basePath+"search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
     url=encodeURI(encodeURI(url));
     window.location.href=url;
 }
 function labelSearch_1(e){
 	var str=$(e).text().substring(2,6);
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+str+"&searchClass=按标签搜索";
+	var url=basePath+"search?"+"searchContent="+str+"&searchClass=按标签搜索";
 	url=encodeURI(encodeURI(url));
 	window.location.href=url;
 }
 function labelSearch(e){
 	var str=$(e).text().substring(1,5);
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+str+"&searchClass=按标签搜索";
+	var url=basePath+"search?"+"searchContent="+str+"&searchClass=按标签搜索";
 	url=encodeURI(encodeURI(url));
 	window.location.href=url;
 }
