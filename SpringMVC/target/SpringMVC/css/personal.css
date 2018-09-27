@@ -455,9 +455,22 @@ body{
 }
 .tipRow{
     height:33px;
-    font-size:1em;
+    font-size:14px;
     line-height:33px;
 }
 .tipDelete{
 	display:none;
+}
+@media screen and (max-width: 1200px){
+	.col-md-6{
+		width:90%;
+		margin-bottom:50px;
+	}
+	#searchContent{
+		padding-left:0px;
+		padding-right:0px;
+	}
+	#bannerBottom{
+		font-size:22px;
+	}
 }

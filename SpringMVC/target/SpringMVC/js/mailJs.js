@@ -37,7 +37,7 @@ $(function(){
 });
 
 function turnSearch(){
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
+	var url=basePath+"search?"+"searchContent="+$('#searchContent').val()+"&searchClass="+$('#searchClass').val();
     url=encodeURI(encodeURI(url));
     window.location.href=url;
 }
@@ -46,29 +46,29 @@ function creatCol(label,themeName,content,userId,userName,time,themeId,responseI
 	 for(var i=0;i<label.length;i++){
 			node+='<a href="javascript:void(0)" class="label_1" onclick="labelSearch(this)" >['+label[i]+']</a>';
 		}
-	 node+='<a href="http://localhost:8080/SpringMVC/read?id='+themeId+'">'+themeName+'</a>';
-	 node+='</div><div class="col-md-4 mailContentCol_2"><a href="http://localhost:8080/SpringMVC/read?id='+responseId+'">'+content+'</a></div><div class="col-md-2 mailContentCol_3">'
-	 +'<a href="http://localhost:8080/SpringMVC/personal/'+userId+'">'+userName+'</a></div><div class="col-md-2 mailContentCol_4">'
+	 node+='<a href="'+basePath+'read?id='+themeId+'">'+themeName+'</a>';
+	 node+='</div><div class="col-md-4 mailContentCol_2"><a href="'+basePath+'read?id='+responseId+'">'+content+'</a></div><div class="col-md-2 mailContentCol_3">'
+	 +'<a href="'+basePath+'personal/'+userId+'">'+userName+'</a></div><div class="col-md-2 mailContentCol_4">'
 	 +time+'</div></div>';
 	 $("#mailBodyContent").append(node);
 }
 function labelSearch(e){
 	var str=$(e).text().substring(1,5);
-	var url="http://localhost:8080/SpringMVC/search?"+"searchContent="+str+"&searchClass=按标签搜索";
+	var url=basePath+"search?"+"searchContent="+str+"&searchClass=按标签搜索";
 	url=encodeURI(encodeURI(url));
 	window.location.href=url;
 }
 function creatPageCol(pageNum,pageIndex){
-	var node;
-	for(var i=1;i<pageNum;i++){
+	var node="";
+	for(var i=0;i<pageNum;i++){
 		node+='<li><a href="javascript:void(0)" onclick="turnPage(this)" >'+(i+1)+'</a></li>';
 	}
-	if(parseInt(pageNum)!=1&&parseInt(pageIndex)!=parseInt(pageNum)){
+	if(pageNum!=1&&pageIndex!=pageNum){
 		node+='<li><a href="javascript:void(0)" onclick="nextPage()" >下一页 &rarr;</a></li>';
 	}
 	$('.forumPagination').append(node);
-	$('.forumPagination > li:eq('+(parseInt(pageIndex)-1)+')').addClass("focus");
-	if(parseInt(pageIndex)!=1){
+	$('.forumPagination > li:eq('+(pageIndex-1)+')').addClass("focus");
+	if(pageIndex!=1){
 		$('.forumPagination').prepend('<li><a href="javascript:void(0)" onclick="beforePage()" >&larr; 上一页</a></li>');
 	}
 }
@@ -76,13 +76,14 @@ function turnPage(e){
 	var page=$(e).text();
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/mailPageAjax",
+		url: basePath+"mailPageAjax",
 		data: {
 			pageIndex:page
 		},
 		dataType: "json",
 		success: function(data){
 			$("#mailBodyContent").html("");
+			$(".forumPagination:eq(0)").html("");
 			pageIndex=parseInt(page);
 			 var node_1='<div class="row mailContentRow"><div class="col-md-4" style="color:#767474; font-weight: 600;"><i class="fa fa-home"></i> 主题</div><div class="col-md-4" style="color:#767474; font-weight: 600;"><i class="fa fa-envelope-open"></i> 回复内容</div><div class="col-md-2" style="color:#767474; font-weight: 600;"><i class="fa fa-user"></i> 回复者</div><div class="col-md-2" style="color:#767474; font-weight: 600;"><i class="fa fa-clock-o"></i> 回复时间</div></div>';
 			 $("#mailBodyContent").append(node_1);
@@ -104,13 +105,14 @@ function nextPage(){
 	var page=++pageIndex;
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/mailPageAjax",
+		url: basePath+"mailPageAjax",
 		data: {
 			pageIndex:page
 		},
 		dataType: "json",
 		success: function(data){
 			$("#mailBodyContent").html("");
+			$(".forumPagination:eq(0)").html("");
 			 var node_1='<div class="row mailContentRow"><div class="col-md-4" style="color:#767474; font-weight: 600;"><i class="fa fa-home"></i> 主题</div><div class="col-md-4" style="color:#767474; font-weight: 600;"><i class="fa fa-envelope-open"></i> 回复内容</div><div class="col-md-2" style="color:#767474; font-weight: 600;"><i class="fa fa-user"></i> 回复者</div><div class="col-md-2" style="color:#767474; font-weight: 600;"><i class="fa fa-clock-o"></i> 回复时间</div></div>';
 			 $("#mailBodyContent").append(node_1);
 			for(var i=0;i<data.themes.length;i++){
@@ -132,13 +134,14 @@ function beforePage(){
 	var page=--pageIndex;
 	$.ajax({ 
 	    type: "POST", 	
-		url: "http://localhost:8080/SpringMVC/mailPageAjax",
+		url: basePath+"mailPageAjax",
 		data: {
 			pageIndex:page
 		},
 		dataType: "json",
 		success: function(data){
 			$("#mailBodyContent").html("");
+			$(".forumPagination:eq(0)").html("");
 			 var node_1='<div class="row mailContentRow"><div class="col-md-4" style="color:#767474; font-weight: 600;"><i class="fa fa-home"></i> 主题</div><div class="col-md-4" style="color:#767474; font-weight: 600;"><i class="fa fa-envelope-open"></i> 回复内容</div><div class="col-md-2" style="color:#767474; font-weight: 600;"><i class="fa fa-user"></i> 回复者</div><div class="col-md-2" style="color:#767474; font-weight: 600;"><i class="fa fa-clock-o"></i> 回复时间</div></div>';
 			 $("#mailBodyContent").append(node_1);
 			for(var i=0;i<data.themes.length;i++){

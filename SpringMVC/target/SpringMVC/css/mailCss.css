@@ -113,6 +113,7 @@ body{
 #mailBody{
     width:100%;
     padding:40px 50px;
+    position: relative;
 }
 #mailBodyTop{
     width:100%;
@@ -126,18 +127,21 @@ body{
 }
 #mailBodyContent{
     width:100%;
+    position: relative;
 }
 .mailContentRow{
-    height:50px;
-    line-height:50px;
+	width:100%;
+	position: relative;
 }
 .mailContentRow > div{
+	display:flex;
     border:1px solid #D3D3D3;
     font-size:15px;
     text-align:center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    height:100px;
 }
 .mailContentRow i{
     display:inline-block;
@@ -152,4 +156,41 @@ body{
     color: #23527c;
     cursor: default;
     background-color: rgb(238,238,238);
+}
+@media screen and (max-width: 1200px){
+	
+	#searchContent{
+		padding-left:0px;
+		padding-right:0px;
+	}
+	#bannerBottom{
+		font-size:22px;
+	}
+	#mailBody{
+		padding:40px 30px;
+	}
+	.mailContentCol_1{
+		display:block !important;
+		line-height:100px;
+		font-size:14px !important;
+	}
+	.mailContentCol_2{
+		font-size:14px !important;
+	}
+	.mailContentCol_3{
+		display:block !important;
+		line-height:100px;
+		font-size:14px !important;
+	}
+	.mailContentCol_4{
+		display:block !important;
+		line-height:100px;
+		font-size:14px !important;
+	}
+	.label_1{
+		font-size:14px !important;
+	}
+	.label_2{
+		font-size:14px !important;
+	}
 }

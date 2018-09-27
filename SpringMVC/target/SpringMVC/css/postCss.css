@@ -7,17 +7,25 @@
 body{
     font-family:'Microsoft YaHei';
     padding:20px;
-    background-color:#b9f9d5;
-    background: linear-gradient(to  left, #f1f2f4 , #b9f9d5);
+    background-color:#f4f4f4; 
+    background: linear-gradient(to  left, #f4f4f4 , #f4f4f4);
 }
 #top{
-    background:url(../images/top.jpg) no-repeat 0px 0px;
+    background:url(../images/top.jpg) no-repeat top right;
     box-shadow:4px 2px 6px #333333;
 }
 #top a{
-
     font-weight:bold;
     text-shadow: 1px 1px 1px white;
+}
+#nav a{
+	color:#0080c0; 
+}
+#nav li:nth-child(2) a{
+	color:#400080;
+}
+#labelName a{
+	color:#048A04;
 }
 #path{
     margin-top:15px;
@@ -119,16 +127,41 @@ body{
 .name{
     color:#5a79f5;
     border-bottom:2px #99c4f0 solid;
-    border-left:2px #99c4f0 solid;
     font-weight:bold;
+    text-align:center;
+    position: relative;
+    padding-bottom:10px;
+    font-size:15px;
 }
 .level{
-    color:#5a79f5;
-    border-left:2px #99c4f0 solid;
-    font-weight:bold;
+    color:black;
+    margin-top:10px;
+    font-size:15px;
+     text-align:center;
+     display:inline-block;
+     width:150px;
+     height:38px; 
+     border:1px solid #BBBDBF;
+     border-radius: 10%;
+     line-height: 35px; 
+     position: relative;
+}
+.level span{
+	vertical-align: middle; 
 }
 #title{
 	font-size:25px;
+	margin-bottom:30px;
+	padding:10px;
+	padding-top:0px;
+	border-bottom:1px solid #BBBDBF;
+	position: relative;
+}
+#title button{
+	float:right;
+	color:rgb(65,139,202);
+	display:inline-block;
+	margin-right:10px;
 }
 .content{
 	width:100%;
@@ -153,9 +186,9 @@ body{
 .head{
 	padding:3px;
 	border:1px #c8ebf3 solid;
-	margin: 20px auto;
-	width:55%;
+	margin: 20px auto; 
 	border-radius:5px;
+	width:150px;
 }
 
 
@@ -172,7 +205,44 @@ body{
 
 .ban{
 	cursor:pointer;
+	display:inline-block;
+	position: absolute;
+	top:0px;
+	right:20px;
 }
+
+
+
+.removeBan{
+	cursor:pointer;
+	color:red;
+	display:inline-block;
+
+}
+.removeBan:hover{
+	color:#c80000;
+}
+
+#recommend{
+	color:#31b0d5;
+	float:right;
+	cursor:pointer;
+}
+
+#removeRecommend{
+
+
+	float:right;
+	cursor:pointer;
+}
+
+#usergreat{
+	margin-left:80%;
+	margin-top:10px;
+	color:#31b0d5;
+}
+
+
 .responseFloor{
 	cursor:pointer;
 }
@@ -234,4 +304,18 @@ body{
 .head img{
 	width:140px;
 	height:140px;
+}
+.fa-star{
+	color:rgb(249,223,154);
+}
+.levelNum{
+	display:inline-block;
+	font-size:13px;
+	font-weight:bold; 
+	color:#a27755;
+	position: absolute;
+	top:0px;
+	right:35px;
+	font-style: normal;
+	
 }

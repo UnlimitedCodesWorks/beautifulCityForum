@@ -1,6 +1,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <jsp:useBean id="userBean" class="com.forum.login.LoginBean" scope="session"/>
 <%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	boolean b=userBean==null||userBean.getUserId()==null||userBean.getUserId().length()==0;
  %>
 <!DOCTYPE html>
@@ -9,26 +11,26 @@
     <meta charset="UTF-8" />
     <title>搜索结果</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>font-awesome-4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/css/searchCss.css">
-    <script src="http://localhost:8080/SpringMVC/js/searchJs.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/searchCss.css">
+    <script src="<%=basePath %>js/searchJs.js"></script>
 </head>
 <body>
      <div id="TopBanner">
-        <img src="http://localhost:8080/SpringMVC/indexImage/banner_3.jpg" alt="美丽乡村">
+        <img src="<%=basePath %>indexImage/banner_3.jpg" alt="美丽乡村">
         <ul id="BannerLeft">
-            <li><a href="http://localhost:8080/SpringMVC/forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
+            <li><a href="<%=basePath %>forum/1"><i class="fa fa-envira"></i> 美丽乡村交流社区</a></li>
             <li><a href=""><i class="fa fa-search"></i> 搜索结果</a></li>
         </ul>
         <ul id="BannerRight">
             <li><a href="#" class="personalHref" >你好<br><%=userBean.getUsername() %></a></li>
-            <li><a href="http://localhost:8080/beautifulCity/index">首页</a></li>
+            <li><a href="<%=basePath %>beautifulCity/index">首页</a></li>
             <li><a href="#" class="personalHref" >我的</a></li>
-            <li><a href="http://localhost:8080/SpringMVC/mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
-            <li><a href="http://localhost:8080/SpringMVC/exit">退出</a></li>
-            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='http://localhost:8080/SpringMVC/indexImage/indexImg.jpg'" alt="用户头像"></a></li>
+            <li><a href="<%=basePath %>mail">消息 <span class="badge unread" style="color:#38AA02; background-color:white;">10</span></a></li>
+            <li><a href="<%=basePath %>exit">退出</a></li>
+            <li><a href='#' class="personalHref"><img src="#" alt="用户头像" onerror="javascript:this.src='<%=basePath %>indexImage/indexImg.jpg'" alt="用户头像"></a></li>
         </ul>
         <div id="bannerBottom">
         Beautiful Country Forum
@@ -78,6 +80,7 @@
 	var searchContent='${searchContent}';
 	var pageIndex=1;
 	var pageNum='${pageNum}';
+	var basePath='<%=basePath %>';
 	if(searchContent=="全部主题"){
 		searchContent="";
 	}
@@ -106,8 +109,8 @@
    	var b="<%=b%>";
    	var userId_1="<%=userBean.getUserId()%>";
    	if(b!="true"){
-   		$(".personalHref").attr("href","http://localhost:8080/SpringMVC/personal/"+userId_1);
-		$(".personalHref img").attr("src","http://localhost:8080/SpringMVC/personalIcon/"+userId_1+".jpg");
+   		$(".personalHref").attr("href",basePath+"personal/"+userId_1);
+		$(".personalHref img").attr("src",basePath+"personalIcon/"+userId_1+".jpg");
 		 
    	}else{
    		$("#BannerRight").hide();
