@@ -17,7 +17,7 @@ $(document).ready(function(){
 function loging(){
 	$.ajax({
 	    type: "POST",
-		url: "http://localhost:8080/SpringMVC/loginAjax",
+		url: "http://localhost:8080/loginAjax",
 		data: {
 			userId: $("#userId").val(),
 			password:$("#password").val(),

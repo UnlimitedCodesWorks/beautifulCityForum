@@ -8,7 +8,7 @@
     "imageCompressEnable": true,
     "imageCompressBorder": 1600, 
     "imageInsertAlign": "none",
-    "imageUrlPrefix": "http://localhost:8080/SpringMVC",
+    "imageUrlPrefix": "http://localhost:8080/",
     "imagePathFormat": "/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
                                 
 
@@ -31,7 +31,7 @@
     "catcherActionName": "catchimage", 
     "catcherFieldName": "source", 
     "catcherPathFormat": "/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
-    "catcherUrlPrefix": "http://localhost:8080/SpringMVC", 
+    "catcherUrlPrefix": "http://localhost:8080/",
     "catcherMaxSize": 2048000, 
     "catcherAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
 
@@ -39,7 +39,7 @@
     "videoActionName": "uploadvideo", 
     "videoFieldName": "upfile", 
     "videoPathFormat": "/ueditor/jsp/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}", 
-    "videoUrlPrefix": "http://localhost:8080/SpringMVC", 
+    "videoUrlPrefix": "http://localhost:8080/",
     "videoMaxSize": 102400000, 
     "videoAllowFiles": [
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
@@ -49,7 +49,7 @@
     "fileActionName": "uploadfile", 
     "fileFieldName": "upfile", 
     "filePathFormat": "/ueditor/jsp/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}",
-    "fileUrlPrefix": "http://localhost:8080/SpringMVC",
+    "fileUrlPrefix": "http://localhost:8080/",
     "fileMaxSize": 51200000,
     "fileAllowFiles": [
         ".png", ".jpg", ".jpeg", ".gif", ".bmp",
@@ -63,14 +63,14 @@
     "imageManagerActionName": "listimage", 
     "imageManagerListPath": "/ueditor/jsp/upload/image/",
     "imageManagerListSize": 20, 
-    "imageManagerUrlPrefix": "http://localhost:8080/SpringMVC",
+    "imageManagerUrlPrefix": "http://localhost:8080/",
     "imageManagerInsertAlign": "none", 
     "imageManagerAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
 
 
     "fileManagerActionName": "listfile",
     "fileManagerListPath": "/ueditor/jsp/upload/file/",
-    "fileManagerUrlPrefix": "http://localhost:8080/SpringMVC", 
+    "fileManagerUrlPrefix": "http://localhost:8080/",
     "fileManagerListSize": 20,
     "fileManagerAllowFiles": [
         ".png", ".jpg", ".jpeg", ".gif", ".bmp",

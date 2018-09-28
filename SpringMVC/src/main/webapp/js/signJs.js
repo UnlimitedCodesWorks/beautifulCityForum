@@ -29,7 +29,7 @@ function signing(){
 	else{
 		$.ajax({
 		    type: "POST",
-			url: "http://localhost:8080/SpringMVC/signAjax",
+			url: "http://localhost:8080/signAjax",
 			data: {
 				userId: $("#userId").val(),
 				userName:$("#userName").val(),

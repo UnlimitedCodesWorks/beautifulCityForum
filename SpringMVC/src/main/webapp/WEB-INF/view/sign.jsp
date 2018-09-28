@@ -12,14 +12,14 @@
     <meta charset="UTF-8" />
     <title>注册</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://localhost:8080/SpringMVC/css/slide-unlock.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/css/signCss.css">
+    <link href="http://localhost:8080/css/slide-unlock.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/css/signCss.css">
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="http://localhost:8080/SpringMVC/js/signJs.js"></script>
-    <script src="http://localhost:8080/SpringMVC/js/jquery.slideunlock.js"></script>
-    <script src="http://localhost:8080/SpringMVC/jQueryYzm/js/gVerify.js"></script>
+    <script src="http://localhost:8080/js/signJs.js"></script>
+    <script src="http://localhost:8080/js/jquery.slideunlock.js"></script>
+    <script src="http://localhost:8080/jQueryYzm/js/gVerify.js"></script>
 </head>
 <body>
 <div class="container">
@@ -66,10 +66,10 @@
         <div class="col-md-3 column">
             <ul class="nav nav-tabs">
                 <li >
-                     <a href="http://localhost:8080/SpringMVC/forum/1"><i class="glyphicon glyphicon-home"></i>首页</a>
+                     <a href="http://localhost:8080/forum/1"><i class="glyphicon glyphicon-home"></i>首页</a>
                 </li>
                 <li >
-                     <a href="http://localhost:8080/SpringMVC/login"><i class="glyphicon glyphicon-user"></i>登录</a>
+                     <a href="http://localhost:8080/login"><i class="glyphicon glyphicon-user"></i>登录</a>
                 </li>
                 <li class="active">
                      <a href="#"><i class="glyphicon glyphicon-edit"></i>注册</a>
@@ -155,7 +155,7 @@
 							注册成功
 						</div>
 						<div class="modal-footer">
-							<a href="http://localhost:8080/SpringMVC/login"> <button type="button" class="btn btn-success">转至登录</button> </a>
+							<a href="http://localhost:8080/login"> <button type="button" class="btn btn-success">转至登录</button> </a>
 						</div>
 					</div>
 					

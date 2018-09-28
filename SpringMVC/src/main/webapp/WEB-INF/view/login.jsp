@@ -17,11 +17,11 @@
     <meta charset="UTF-8" />
     <title>登录</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/SpringMVC/css/logincss.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/css/logincss.css">
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="http://localhost:8080/SpringMVC/js/loginJs.js"></script>
+    <script src="http://localhost:8080/js/loginJs.js"></script>
 </head>
 <body>
 <div class="container">
@@ -68,13 +68,13 @@
         <div class="col-md-3 column">
             <ul class="nav nav-tabs">
                 <li >
-                     <a href="http://localhost:8080/SpringMVC/forum/1"><i class="glyphicon glyphicon-home"></i>首页</a>
+                     <a href="http://localhost:8080/forum/1"><i class="glyphicon glyphicon-home"></i>首页</a>
                 </li>
                 <li class="active">
                      <a href="#"><i class="glyphicon glyphicon-user"></i>登录</a>
                 </li>
                 <li >
-                     <a href="http://localhost:8080/SpringMVC/sign"><i class="glyphicon glyphicon-edit"></i>注册</a>
+                     <a href="http://localhost:8080/sign"><i class="glyphicon glyphicon-edit"></i>注册</a>
                 </li>
             </ul>
             <br>
@@ -146,7 +146,7 @@
 							登录成功
 						</div>
 						<div class="modal-footer">
-							<a href="http://localhost:8080/SpringMVC/forum/1"> <button type="button" class="btn btn-success">回到论坛</button> </a>
+							<a href="http://localhost:8080/forum/1"> <button type="button" class="btn btn-success">回到论坛</button> </a>
 						</div>
 					</div>
 					
